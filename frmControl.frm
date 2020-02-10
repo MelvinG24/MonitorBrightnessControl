@@ -14,6 +14,11 @@ Begin VB.Form frmControl
    ScaleHeight     =   4185
    ScaleWidth      =   975
    StartUpPosition =   3  'Windows Default
+   Begin VB.Timer Timer1 
+      Interval        =   1
+      Left            =   0
+      Top             =   3240
+   End
    Begin MSComctlLib.Slider sliderControl 
       Height          =   3255
       Left            =   200
@@ -25,9 +30,13 @@ Begin VB.Form frmControl
       _Version        =   393216
       OLEDropMode     =   1
       Orientation     =   1
+      LargeChange     =   10
+      SmallChange     =   10
       Max             =   100
+      SelStart        =   50
       TickStyle       =   2
-      TickFrequency   =   5
+      TickFrequency   =   50
+      Value           =   50
    End
    Begin VB.PictureBox Picture1 
       Align           =   2  'Align Bottom
@@ -60,7 +69,10 @@ Begin VB.Form frmControl
          ForeColor       =   &H8000000D&
          Height          =   240
          Left            =   185
+         MouseIcon       =   "frmControl.frx":0000
+         MousePointer    =   99  'Custom
          TabIndex        =   1
+         ToolTipText     =   "Add custome shortcut"
          Top             =   120
          Width           =   630
       End
@@ -71,32 +83,48 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Declare Function SystemParametersInfo Lib "user32" Alias "SystemParametersInfoA" ( _
-                ByVal uAction As Long, _
-                ByVal uParam As Long, _
-                ByRef lpvParam As Any, _
-                ByVal fuWinIni As Long) As Long
+Option Explicit
 
-Private Const SPI_GETWORKAREA = 48
+Dim ActiveApp As Long
+Dim r As Integer
 
-Private Type RECT
-    Left As Long
-    Top As Long
-    Right As Long
-    Bottom As Long
-End Type
-
-Sub PositionForm()
-    
-End Sub
+Private Declare Function GetActiveWindow Lib "user32" () As Long
 
 Private Sub Form_Load()
-    Dim WindowRect As RECT
-    SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
-    Me.Top = WindowRect.Bottom * Screen.TwipsPerPixelY - Me.Height
-    Me.Left = WindowRect.Right * Screen.TwipsPerPixelX - Me.Width
+    r = (frmSysTray.M_BRIGHTNESS * 10) / 25.5
+    sliderControl.Value = r
+    Timer1.Enabled = True
+End Sub
+
+Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+'    If X >= Me.Left And X <= Me.Left + Me.Width And _
+'        Y >= Me.Top And Y <= Me.Top + Me.Height Then
+'        MsgBox "Shape1 has been clicked."
+'    End If
 End Sub
 
 Private Sub Form_LostFocus()
     Unload Me
+End Sub
+
+Private Sub lblConfig_Click()
+    frmConfig.Show
+    Unload Me
+End Sub
+
+Private Sub sliderControl_Change()
+    r = (sliderControl.Value * 25.5) / 10
+    frmSysTray.M_BRIGHTNESS = r
+End Sub
+
+Private Sub Timer1_Timer()
+    If ActiveApp = 0 Then
+        ActiveApp = GetActiveWindow
+    End If
+    
+    If GetActiveWindow <> ActiveApp Then
+        Timer1.Enabled = False
+        ActiveApp = 0
+        Unload Me
+    End If
 End Sub

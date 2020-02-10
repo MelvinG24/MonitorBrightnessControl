@@ -1,5 +1,4 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
 Begin VB.Form frmMain 
    BorderStyle     =   0  'None
    Caption         =   "Form1"
@@ -7,33 +6,18 @@ Begin VB.Form frmMain
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   4560
+   ClipControls    =   0   'False
+   ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    ScaleHeight     =   3030
    ScaleWidth      =   4560
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    WindowState     =   2  'Maximized
-   Begin VB.Frame frameControl 
-      Caption         =   "Frame1"
-      Height          =   975
-      Left            =   120
-      TabIndex        =   0
-      Top             =   1200
-      Width           =   4095
-      Begin MSComctlLib.Slider sliderControl 
-         Height          =   375
-         Left            =   120
-         TabIndex        =   1
-         Top             =   360
-         Width           =   3855
-         _ExtentX        =   6800
-         _ExtentY        =   661
-         _Version        =   393216
-         Max             =   100
-         SelStart        =   50
-         TickStyle       =   3
-         Value           =   50
-      End
+   Begin VB.Timer Timer1 
+      Interval        =   1
+      Left            =   1320
+      Top             =   0
    End
    Begin VB.Label lblInfo 
       AutoSize        =   -1  'True
@@ -48,9 +32,10 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      ForeColor       =   &H80000010&
       Height          =   285
       Left            =   120
-      TabIndex        =   2
+      TabIndex        =   0
       Top             =   0
       Width           =   810
    End
@@ -62,23 +47,31 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Dim WindowRect As RECT
+
+Private Declare Function SystemParametersInfo Lib "user32" Alias "SystemParametersInfoA" ( _
+                ByVal uAction As Long, _
+                ByVal uParam As Long, _
+                ByRef lpvParam As Any, _
+                ByVal fuWinIni As Long) As Long
+
 Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal nIndex As Long) As Long
  
 Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal nIndex As Long, _
                 ByVal dwNewLong As Long) As Long
                 
 Private Declare Function SetLayeredWindowAttributes Lib "user32" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal crKey As Long, _
                 ByVal bAlpha As Byte, _
                 ByVal dwFlags As Long) As Long
 
 Private Declare Function SetWindowPos Lib "user32" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal hWndInsertAfter As Long, _
                 ByVal X As Long, _
                 ByVal Y As Long, _
@@ -86,7 +79,14 @@ Private Declare Function SetWindowPos Lib "user32" ( _
                 ByVal cy As Long, _
                 ByVal wFlags As Long) As Long
 
- 
+Private Type RECT
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
+End Type
+
+Private Const SPI_GETWORKAREA = 48
 Private Const GWL_STYLE = (-16)
 Private Const GWL_EXSTYLE = (-20)
 Private Const WS_EX_LAYERED = &H80000
@@ -102,54 +102,36 @@ Attribute HWND_NOTOPMOST.VB_VarHelpID = -1
 
 Private Sub ClickThru(Frm As Form, bEnabled As Boolean)
     If bEnabled = True Then ' enable click-thru form
-        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
+        SetWindowLong Frm.hWnd, GWL_EXSTYLE, GetWindowLong(Frm.hWnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
     Else ' disable click thru
-        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
+        SetWindowLong Frm.hWnd, GWL_EXSTYLE, GetWindowLong(Frm.hWnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
     End If
 End Sub
 
 Private Sub Form_Load()
-    Dim tb As String
-    Dim ts As String
-    Dim r As Integer
+    'Set values to the variable
+    SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
     
-    tb = "F5"
-    ts = "F6"
-    r = (sliderControl.Value * 25.5) / 10
+    'Shortcut label
+    lblInfo.Visible = frmSysTray.L_SHORTCUTS
+    lblInfo.Caption = "Lower-Brightness: " + frmSysTray.tb & vbNewLine & "Raise-Brightness: " + frmSysTray.ts
+    lblInfo.Top = WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height
+    lblInfo.Left = WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width
     
-    lblInfo.Caption = "Bajar brillo: " + tb & vbNewLine & "Subir brillo: " + ts
-    frameControl.Caption = r
-    
-    frameControl.Left = (Me.Width - frameControl.Width) / 2
-    frameControl.Top = (Me.Height - frameControl.Height) / 2
-    lblInfo.Left = (Me.Width - lblInfo.Width) - 120
-    lblInfo.Top = (Me.Height - lblInfo.Height) - 120
-    
+    'Black screen settings
     Me.BackColor = vbBlack
     
-    SetWindowPos Me.hwnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS 'Set formulario always on top
-    SetWindowLong Me.hwnd, GWL_EXSTYLE, WS_EX_LAYERED
+    SetWindowPos Me.hWnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS 'Set formulario always on top
+    SetWindowLong Me.hWnd, GWL_EXSTYLE, WS_EX_LAYERED
     'SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_LAYERED
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, r, LWA_ALPHA
+    SetLayeredWindowAttributes Me.hWnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
     
     ClickThru Me, True 'Enable click-thru formulario
 End Sub
 
 Private Sub Form_Resize()
-    frameControl.Left = (Me.Width - frameControl.Width) / 2
-    frameControl.Top = (Me.Height - frameControl.Height) / 2
-    lblInfo.Left = (Me.Width - lblInfo.Width) - 120
-    lblInfo.Top = (Me.Height - lblInfo.Height) - 120
-End Sub
-
-Private Sub sliderControl_Change()
-    Dim r As Integer
-    
-    r = (sliderControl.Value * 25.5) / 10
-    
-    frameControl.Caption = r
-    
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, r, LWA_ALPHA
+    lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120
+    lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 120
 End Sub
 
 Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -160,4 +142,7 @@ Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
     End If
 End Sub
 
-
+Private Sub Timer1_Timer()
+    lblInfo.Visible = frmSysTray.L_SHORTCUTS
+    SetLayeredWindowAttributes Me.hWnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+End Sub

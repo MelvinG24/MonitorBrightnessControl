@@ -14,6 +14,11 @@ Begin VB.Form frmAbout
    ScaleMode       =   0  'User
    ScaleWidth      =   5577.967
    StartUpPosition =   2  'CenterScreen
+   Begin VB.Timer Timer1 
+      Interval        =   1
+      Left            =   0
+      Top             =   0
+   End
    Begin VB.TextBox txtDisclaimer 
       Appearance      =   0  'Flat
       BackColor       =   &H8000000F&
@@ -122,7 +127,7 @@ Begin VB.Form frmAbout
       Height          =   300
       Left            =   1530
       TabIndex        =   5
-      Top             =   1395
+      Top             =   1320
       Width           =   2310
    End
    Begin VB.Label lblVersion 
@@ -131,7 +136,7 @@ Begin VB.Form frmAbout
       Height          =   195
       Left            =   1530
       TabIndex        =   6
-      Top             =   1695
+      Top             =   1560
       Width           =   525
    End
    Begin VB.Label lblDisclaimer 
@@ -150,6 +155,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Dim ActiveApp As Long
 
 ' Opciones de seguridad de clave del Registro...
 Const READ_CONTROL = &H20000
@@ -177,7 +184,7 @@ Const gREGVALSYSINFO = "PATH"
 Private Declare Function RegOpenKeyEx Lib "advapi32" Alias "RegOpenKeyExA" (ByVal hKey As Long, ByVal lpSubKey As String, ByVal ulOptions As Long, ByVal samDesired As Long, ByRef phkResult As Long) As Long
 Private Declare Function RegQueryValueEx Lib "advapi32" Alias "RegQueryValueExA" (ByVal hKey As Long, ByVal lpValueName As String, ByVal lpReserved As Long, ByRef lpType As Long, ByVal lpData As String, ByRef lpcbData As Long) As Long
 Private Declare Function RegCloseKey Lib "advapi32" (ByVal hKey As Long) As Long
-
+Private Declare Function GetActiveWindow Lib "user32" () As Long
 
 Private Sub cmdSysInfo_Click()
   Call StartSysInfo
@@ -188,7 +195,7 @@ Private Sub cmdOK_Click()
 End Sub
 
 Private Sub Form_Load()
-    Me.Caption = "Acerca de: " & App.Title
+    Me.Caption = "About: " & App.Title
     lblVersion.Caption = "Versión " & App.Major & "." & App.Minor
     lblTitle.Caption = App.Title
     lblDescription.Caption = App.Title & App.FileDescription
@@ -279,3 +286,19 @@ GetKeyError:      ' Borrar después de que se produzca un error...
     GetKeyValue = False                                     ' Fallo de retorno
     rc = RegCloseKey(hKey)                                  ' Cerrar clave de Registro
 End Function
+
+Private Sub Form_LostFocus()
+    Unload Me
+End Sub
+
+Private Sub Timer1_Timer()
+    If ActiveApp = 0 Then
+        ActiveApp = GetActiveWindow
+    End If
+    
+    If GetActiveWindow <> ActiveApp Then
+        Timer1.Enabled = False
+        ActiveApp = 0
+        Unload Me
+    End If
+End Sub
