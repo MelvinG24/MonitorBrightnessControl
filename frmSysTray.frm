@@ -7,6 +7,7 @@ Begin VB.Form frmSysTray
    ClientLeft      =   1425
    ClientTop       =   2295
    ClientWidth     =   1680
+   Icon            =   "frmSysTray.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
@@ -85,6 +86,12 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Type POINTAPI
+    X As Long
+    Y As Long
+End Type
+
+Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 Public M_BRIGHTNESS As Integer
@@ -122,7 +129,11 @@ End Sub
 
 Private Sub mPopupMenu_Click(Index As Integer)
     Select Case Me.mPopupMenu(Index).Caption
-        Case "About": frmAbout.Show
+        Case "About":
+            If frmControl.Visible = True Then
+                Unload frmControl
+            End If
+                frmAbout.Show 0, frmMain
         Case "On/Off":
             If Me.mPopupMenu(Index).Checked = True Then
                 Me.mPopupMenu(Index).Checked = False
@@ -130,8 +141,9 @@ Private Sub mPopupMenu_Click(Index As Integer)
             Else
                 Me.mPopupMenu(Index).Checked = True
                 frmMain.Show
+                frmMain.ZOrder 0
             End If
-        Case "Config": frmConfig.Show
+        Case "Config": frmConfig.Show 1, frmMain
         Case "Exit":
             Dim Frm As Form
             For Each Frm In Forms
@@ -147,7 +159,12 @@ Private Sub SysTray_LeftClick()
         Unload frmAbout
     End If
     If frmConfig.Visible = False Then
-        frmControl.Show
+        If frmControl.Visible = False Then
+            Dim pt As POINTAPI
+            GetCursorPos pt
+            frmControl.Show 0, frmMain
+            frmControl.Move pt.X * Screen.TwipsPerPixelX, (pt.Y * Screen.TwipsPerPixelY) - frmControl.Height
+        End If
     Else
         Beep
         frmConfig.SetFocus

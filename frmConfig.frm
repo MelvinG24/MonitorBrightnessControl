@@ -6,6 +6,7 @@ Begin VB.Form frmConfig
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   5550
+   Icon            =   "frmConfig.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
@@ -254,6 +255,14 @@ Private Sub chStartUp_Click()
         chStartUp.FontBold = False
         chOnOff.Enabled = False
         chOnOff.Value = 0
+    End If
+End Sub
+
+Private Sub Form_Load()
+    If frmSysTray.L_SHORTCUTS Then
+        chLabel.Value = 1
+    Else
+        chLabel.Value = 0
     End If
 End Sub
 

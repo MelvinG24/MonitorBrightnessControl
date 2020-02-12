@@ -7,6 +7,7 @@ Begin VB.Form frmAbout
    ClientTop       =   1935
    ClientWidth     =   5940
    ClipControls    =   0   'False
+   Icon            =   "frmAbout.frx":0000
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    MinButton       =   0   'False
@@ -14,7 +15,13 @@ Begin VB.Form frmAbout
    ScaleMode       =   0  'User
    ScaleWidth      =   5577.967
    StartUpPosition =   2  'CenterScreen
+   Begin VB.Timer Timer2 
+      Interval        =   1500
+      Left            =   480
+      Top             =   0
+   End
    Begin VB.Timer Timer1 
+      Enabled         =   0   'False
       Interval        =   1
       Left            =   0
       Top             =   0
@@ -27,24 +34,10 @@ Begin VB.Form frmAbout
       Left            =   840
       MultiLine       =   -1  'True
       ScrollBars      =   2  'Vertical
-      TabIndex        =   7
-      Text            =   "frmAbout.frx":0000
+      TabIndex        =   6
+      Text            =   "frmAbout.frx":7F6A
       Top             =   3000
       Width           =   3375
-   End
-   Begin VB.PictureBox picIcon 
-      AutoSize        =   -1  'True
-      BorderStyle     =   0  'None
-      ClipControls    =   0   'False
-      Height          =   480
-      Left            =   2640
-      Picture         =   "frmAbout.frx":0470
-      ScaleHeight     =   337.12
-      ScaleMode       =   0  'User
-      ScaleWidth      =   337.12
-      TabIndex        =   1
-      Top             =   480
-      Width           =   480
    End
    Begin VB.CommandButton cmdOK 
       Cancel          =   -1  'True
@@ -60,14 +53,22 @@ Begin VB.Form frmAbout
       Caption         =   "&Info. del sistema..."
       Height          =   345
       Left            =   4320
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   3555
       Width           =   1485
+   End
+   Begin VB.Image Image2 
+      Height          =   1215
+      Left            =   2290
+      Picture         =   "frmAbout.frx":83DA
+      Stretch         =   -1  'True
+      Top             =   120
+      Width           =   1245
    End
    Begin VB.Image Image1 
       Height          =   540
       Left            =   202
-      Picture         =   "frmAbout.frx":077A
+      Picture         =   "frmAbout.frx":5D2FA
       Stretch         =   -1  'True
       Top             =   3000
       Width           =   525
@@ -78,7 +79,7 @@ Begin VB.Form frmAbout
       Caption         =   "Label1"
       Height          =   195
       Left            =   5280
-      TabIndex        =   9
+      TabIndex        =   8
       Top             =   2520
       Width           =   480
    End
@@ -86,8 +87,8 @@ Begin VB.Form frmAbout
       AutoSize        =   -1  'True
       Caption         =   "Label1"
       Height          =   195
-      Left            =   240
-      TabIndex        =   8
+      Left            =   160
+      TabIndex        =   7
       Top             =   2520
       Width           =   480
    End
@@ -95,7 +96,7 @@ Begin VB.Form frmAbout
       BorderColor     =   &H00808080&
       BorderStyle     =   6  'Inside Solid
       Index           =   1
-      X1              =   84.515
+      X1              =   112.686
       X2              =   5408.938
       Y1              =   1987.827
       Y2              =   1987.827
@@ -105,9 +106,9 @@ Begin VB.Form frmAbout
       Caption         =   "Descripción de la aplicación"
       ForeColor       =   &H00000000&
       Height          =   435
-      Left            =   210
-      TabIndex        =   3
-      Top             =   1980
+      Left            =   160
+      TabIndex        =   2
+      Top             =   1883
       Width           =   5595
    End
    Begin VB.Label lblTitle 
@@ -125,8 +126,8 @@ Begin VB.Form frmAbout
       EndProperty
       ForeColor       =   &H00000000&
       Height          =   300
-      Left            =   1530
-      TabIndex        =   5
+      Left            =   1438
+      TabIndex        =   4
       Top             =   1320
       Width           =   2310
    End
@@ -134,8 +135,8 @@ Begin VB.Form frmAbout
       AutoSize        =   -1  'True
       Caption         =   "Versión"
       Height          =   195
-      Left            =   1530
-      TabIndex        =   6
+      Left            =   1438
+      TabIndex        =   5
       Top             =   1560
       Width           =   525
    End
@@ -144,7 +145,7 @@ Begin VB.Form frmAbout
       ForeColor       =   &H00000000&
       Height          =   825
       Left            =   960
-      TabIndex        =   4
+      TabIndex        =   3
       Top             =   3105
       Width           =   3150
    End
@@ -195,6 +196,7 @@ Private Sub cmdOK_Click()
 End Sub
 
 Private Sub Form_Load()
+    ActiveApp = 0
     Me.Caption = "About: " & App.Title
     lblVersion.Caption = "Versión " & App.Major & "." & App.Minor
     lblTitle.Caption = App.Title
@@ -301,4 +303,8 @@ Private Sub Timer1_Timer()
         ActiveApp = 0
         Unload Me
     End If
+End Sub
+
+Private Sub Timer2_Timer()
+    If Timer1.Enabled = False Then Timer1.Enabled = True
 End Sub

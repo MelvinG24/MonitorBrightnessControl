@@ -56,22 +56,22 @@ Private Declare Function SystemParametersInfo Lib "user32" Alias "SystemParamete
                 ByVal fuWinIni As Long) As Long
 
 Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" ( _
-                ByVal hWnd As Long, _
+                ByVal hwnd As Long, _
                 ByVal nIndex As Long) As Long
  
 Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" ( _
-                ByVal hWnd As Long, _
+                ByVal hwnd As Long, _
                 ByVal nIndex As Long, _
                 ByVal dwNewLong As Long) As Long
                 
 Private Declare Function SetLayeredWindowAttributes Lib "user32" ( _
-                ByVal hWnd As Long, _
+                ByVal hwnd As Long, _
                 ByVal crKey As Long, _
                 ByVal bAlpha As Byte, _
                 ByVal dwFlags As Long) As Long
 
 Private Declare Function SetWindowPos Lib "user32" ( _
-                ByVal hWnd As Long, _
+                ByVal hwnd As Long, _
                 ByVal hWndInsertAfter As Long, _
                 ByVal X As Long, _
                 ByVal Y As Long, _
@@ -96,15 +96,15 @@ Private Const LWA_ALPHA = &H2
 Private Const SWP_NOMOVE = 2                    'new
 Private Const SWP_NOSIZE = 1                    'new
 Private Const FLAGS = SWP_NOMOVE Or SWP_NOSIZE  'new
-Private Const HWND_TOPMOST = -1                 'new
+Private Const HWND_TOPMOST = 0                  'new
 Private Const HWND_NOTOPMOST = -2
 Attribute HWND_NOTOPMOST.VB_VarHelpID = -1
 
 Private Sub ClickThru(Frm As Form, bEnabled As Boolean)
     If bEnabled = True Then ' enable click-thru form
-        SetWindowLong Frm.hWnd, GWL_EXSTYLE, GetWindowLong(Frm.hWnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
+        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
     Else ' disable click thru
-        SetWindowLong Frm.hWnd, GWL_EXSTYLE, GetWindowLong(Frm.hWnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
+        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
     End If
 End Sub
 
@@ -121,10 +121,10 @@ Private Sub Form_Load()
     'Black screen settings
     Me.BackColor = vbBlack
     
-    SetWindowPos Me.hWnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS 'Set formulario always on top
-    SetWindowLong Me.hWnd, GWL_EXSTYLE, WS_EX_LAYERED
+    SetWindowPos Me.hwnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS 'Set formulario always on top
+    SetWindowLong Me.hwnd, GWL_EXSTYLE, WS_EX_LAYERED
     'SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_LAYERED
-    SetLayeredWindowAttributes Me.hWnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
     
     ClickThru Me, True 'Enable click-thru formulario
 End Sub
@@ -135,14 +135,14 @@ Private Sub Form_Resize()
 End Sub
 
 Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
-    If KeyCode = 116 Then
-        sliderControl.Value = sliderControl.Value - 10
-    ElseIf KeyCode = 117 Then
-        sliderControl.Value = sliderControl.Value + 10
-    End If
+    'If KeyCode = 116 Then
+    '    sliderControl.Value = sliderControl.Value - 10
+    'ElseIf KeyCode = 117 Then
+    '    sliderControl.Value = sliderControl.Value + 10
+    'End If
 End Sub
 
 Private Sub Timer1_Timer()
     lblInfo.Visible = frmSysTray.L_SHORTCUTS
-    SetLayeredWindowAttributes Me.hWnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
 End Sub
