@@ -1,34 +1,50 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
 Begin VB.Form frmControl 
-   BorderStyle     =   4  'Fixed ToolWindow
-   ClientHeight    =   4320
-   ClientLeft      =   15
-   ClientTop       =   15
-   ClientWidth     =   1020
+   BorderStyle     =   0  'None
+   ClientHeight    =   4815
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   6495
    ClipControls    =   0   'False
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    NegotiateMenus  =   0   'False
-   ScaleHeight     =   4320
+   ScaleHeight     =   4815
    ScaleMode       =   0  'User
-   ScaleWidth      =   1098.462
+   ScaleWidth      =   6994.615
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
+   Begin MonitorBrightnessControl.ctrlSlider ctrlSlider1 
+      Height          =   2175
+      Left            =   105
+      TabIndex        =   1
+      Top             =   720
+      Width           =   240
+      _ExtentX        =   423
+      _ExtentY        =   3836
+   End
+   Begin VB.Timer Timer2 
+      Enabled         =   0   'False
+      Interval        =   5000
+      Left            =   480
+      Top             =   3720
+   End
    Begin VB.Timer Timer1 
+      Enabled         =   0   'False
       Interval        =   1
       Left            =   0
-      Top             =   3240
+      Top             =   3720
    End
    Begin MSComctlLib.Slider sliderControl 
       Height          =   2295
-      Left            =   175
-      TabIndex        =   2
+      Left            =   840
+      TabIndex        =   0
       Top             =   720
-      Width           =   600
-      _ExtentX        =   1058
+      Width           =   675
+      _ExtentX        =   1191
       _ExtentY        =   4048
       _Version        =   393216
       OLEDropMode     =   1
@@ -41,62 +57,97 @@ Begin VB.Form frmControl
       TickFrequency   =   50
       Value           =   50
    End
-   Begin VB.PictureBox Picture1 
-      Align           =   2  'Align Bottom
+   Begin VB.Line Line1 
+      BorderColor     =   &H00C0C0C0&
+      X1              =   100.154
+      X2              =   399.538
+      Y1              =   3120
+      Y2              =   3120
+   End
+   Begin VB.Image imgSettingsOn 
       Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
-      BorderStyle     =   0  'None
-      ForeColor       =   &H80000008&
+      Height          =   300
+      Left            =   102
+      MouseIcon       =   "frmControl.frx":0000
+      MousePointer    =   99  'Custom
+      Picture         =   "frmControl.frx":0152
+      Stretch         =   -1  'True
+      Top             =   3195
+      Visible         =   0   'False
+      Width           =   285
+   End
+   Begin VB.Image imgSettingsOff 
+      Appearance      =   0  'Flat
+      Height          =   300
+      Left            =   102
+      MouseIcon       =   "frmControl.frx":13C5
+      MousePointer    =   99  'Custom
+      Picture         =   "frmControl.frx":1517
+      Stretch         =   -1  'True
+      Top             =   3195
+      Width           =   285
+   End
+   Begin VB.Image imgOn 
+      Appearance      =   0  'Flat
+      Height          =   300
+      Left            =   93
+      MouseIcon       =   "frmControl.frx":278A
+      MousePointer    =   99  'Custom
+      Picture         =   "frmControl.frx":28DC
+      Stretch         =   -1  'True
+      Top             =   85
+      Width           =   285
+   End
+   Begin VB.Image imgOff 
+      Appearance      =   0  'Flat
+      Height          =   300
+      Left            =   93
+      MouseIcon       =   "frmControl.frx":35A9
+      MousePointer    =   99  'Custom
+      Picture         =   "frmControl.frx":36FB
+      Stretch         =   -1  'True
+      Top             =   85
+      Width           =   285
+   End
+   Begin VB.Shape shapeCon 
+      BackStyle       =   1  'Opaque
+      BorderColor     =   &H00808080&
+      FillColor       =   &H00FFFFFF&
+      FillStyle       =   0  'Solid
+      Height          =   3000
+      Left            =   0
+      Shape           =   4  'Rounded Rectangle
+      Top             =   585
+      Width           =   465
+   End
+   Begin VB.Shape shapeOnOff 
+      BackStyle       =   1  'Opaque
+      BorderColor     =   &H00808080&
+      FillColor       =   &H00FFFFFF&
+      FillStyle       =   0  'Solid
       Height          =   495
       Left            =   0
-      ScaleHeight     =   495
-      ScaleWidth      =   1020
-      TabIndex        =   0
-      Top             =   3825
-      Width           =   1020
-      Begin VB.Label lblConfig 
-         Appearance      =   0  'Flat
-         AutoSize        =   -1  'True
-         BackColor       =   &H80000005&
-         BackStyle       =   0  'Transparent
-         Caption         =   "Config"
-         BeginProperty Font 
-            Name            =   "Ubuntu Mono"
-            Size            =   9.75
-            Charset         =   0
-            Weight          =   400
-            Underline       =   -1  'True
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H8000000D&
-         Height          =   240
-         Left            =   185
-         MouseIcon       =   "frmControl.frx":0000
-         MousePointer    =   99  'Custom
-         TabIndex        =   1
-         ToolTipText     =   "Add custome shortcut"
-         Top             =   120
-         Width           =   630
-      End
+      Shape           =   4  'Rounded Rectangle
+      Top             =   0
+      Width           =   465
    End
    Begin VB.Image imgDay 
-      Height          =   500
-      Left            =   240
-      MouseIcon       =   "frmControl.frx":030A
+      Height          =   495
+      Left            =   840
+      MouseIcon       =   "frmControl.frx":43C8
       MousePointer    =   99  'Custom
-      Picture         =   "frmControl.frx":0614
+      Picture         =   "frmControl.frx":46D2
       Stretch         =   -1  'True
       Top             =   120
-      Width           =   500
+      Width           =   495
    End
    Begin VB.Image imgNight 
       Appearance      =   0  'Flat
       Height          =   495
-      Left            =   240
-      MouseIcon       =   "frmControl.frx":52E01
+      Left            =   840
+      MouseIcon       =   "frmControl.frx":56EBF
       MousePointer    =   99  'Custom
-      Picture         =   "frmControl.frx":5310B
+      Picture         =   "frmControl.frx":571C9
       Stretch         =   -1  'True
       Top             =   3120
       Width           =   495
@@ -109,20 +160,49 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Type RECT
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
+End Type
+
 Dim sys As StatusBar
 Dim ActiveApp As Long
 Dim r As Integer
+Dim WindowRect As RECT
 
+Private Declare Function SystemParametersInfo Lib "user32" Alias "SystemParametersInfoA" ( _
+                ByVal uAction As Long, _
+                ByVal uParam As Long, _
+                ByRef lpvParam As Any, _
+                ByVal fuWinIni As Long) As Long
 Private Declare Function GetActiveWindow Lib "user32" () As Long
+Private Const SPI_GETWORKAREA = 48
+
+Private Sub Form_GotFocus()
+    ActiveApp = GetActiveWindow
+End Sub
 
 Private Sub Form_Load()
+    removBG Me, vbBlack
+    
     ActiveApp = 0
     r = (frmSysTray.M_BRIGHTNESS * 10) / 25.5
     sliderControl.Value = r
     Timer1.Enabled = True
+    SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
+    
+    If frmSysTray.STATE_SCREEN = True Then
+        imgOn.Visible = True
+        imgOff.Visible = False
+    ElseIf frmSysTray.STATE_SCREEN = False Then
+        imgOn.Visible = False
+        imgOff.Visible = True
+    End If
 End Sub
 
-Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 '    If X >= Me.Left And X <= Me.Left + Me.Width And _
 '        Y >= Me.Top And Y <= Me.Top + Me.Height Then
 '        MsgBox "Shape1 has been clicked."
@@ -131,6 +211,14 @@ End Sub
 
 Private Sub Form_LostFocus()
     Unload Me
+End Sub
+
+Private Sub Form_Resize()
+    Me.Width = shapeCon.Width
+    Me.Height = shapeCon.Top + shapeCon.Height
+    
+    Me.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - Me.Height) - 120
+    Me.Left = (WindowRect.Right * Screen.TwipsPerPixelX - Me.Width) - 120
 End Sub
 
 Private Sub imgDay_Click()
@@ -177,9 +265,37 @@ Private Sub imgNight_MouseUp(Button As Integer, Shift As Integer, X As Single, Y
     imgNight.BorderStyle = 0
 End Sub
 
-Private Sub lblConfig_Click()
+Private Sub imgOff_Click()
+    imgOn.Visible = True
+    imgOff.Visible = False
+    frmMain.Show
+    frmMain.ZOrder 0
+    Me.ZOrder 0
+End Sub
+
+Private Sub imgOn_Click()
+    imgOff.Visible = True
+    imgOn.Visible = False
+    Unload frmMain
+End Sub
+
+Private Sub imgSettingsOff_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    imgSettingsOn.Visible = True
+    imgSettingsOff.Visible = False
+End Sub
+
+Private Sub imgSettingsOff_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Unload Me
-    frmConfig.Show 1, frmMain
+    frmConfig.Show 0, frmMain
+    If frmConfig.Visible = True Then
+        imgSettingsOff.Visible = True
+        imgSettingsOn.Visible = False
+    End If
+End Sub
+
+Private Sub imgSettingsOn_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    imgSettingsOff.Visible = True
+    imgSettingsOn.Visible = False
 End Sub
 
 Private Sub sliderControl_Change()
@@ -188,13 +304,26 @@ Private Sub sliderControl_Change()
 End Sub
 
 Private Sub Timer1_Timer()
+    If frmSysTray.STATE_SCREEN = True Then
+        imgOn.Visible = True
+        imgOff.Visible = False
+    Else
+        imgOn.Visible = False
+        imgOff.Visible = True
+    End If
+    
     If ActiveApp = 0 Then
         ActiveApp = GetActiveWindow
+        Timer2.Enabled = False
     End If
     
     If GetActiveWindow <> ActiveApp Then
-        Timer1.Enabled = False
-        ActiveApp = 0
+        Timer2.Enabled = True
+    End If
+End Sub
+
+Private Sub Timer2_Timer()
+    If GetActiveWindow <> ActiveApp Then
         Unload Me
     End If
 End Sub

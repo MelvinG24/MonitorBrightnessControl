@@ -14,8 +14,15 @@ Begin VB.Form frmMain
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    WindowState     =   2  'Maximized
+   Begin VB.Timer Timer2 
+      Enabled         =   0   'False
+      Interval        =   100
+      Left            =   1800
+      Top             =   0
+   End
    Begin VB.Timer Timer1 
-      Interval        =   1
+      Enabled         =   0   'False
+      Interval        =   100
       Left            =   1320
       Top             =   0
    End
@@ -86,6 +93,7 @@ Private Type RECT
     Bottom As Long
 End Type
 
+Private Const WS_EX_COMPOSITED = &H2
 Private Const SPI_GETWORKAREA = 48
 Private Const GWL_STYLE = (-16)
 Private Const GWL_EXSTYLE = (-20)
@@ -93,30 +101,29 @@ Private Const WS_EX_LAYERED = &H80000
 Private Const WS_EX_TRANSPARENT = &H20&         'new
 Private Const LWA_COLORKEY = &H1
 Private Const LWA_ALPHA = &H2
-Private Const SWP_NOMOVE = 2                    'new
-Private Const SWP_NOSIZE = 1                    'new
-Private Const FLAGS = SWP_NOMOVE Or SWP_NOSIZE  'new
-Private Const HWND_TOPMOST = 0                  'new
+Private Const SWP_NOMOVE As Long = &H2
+Private Const SWP_NOSIZE As Long = &H1
+Private Const FLAGS = SWP_NOMOVE + SWP_NOSIZE
+Private Const HWND_TOPMOST = -1                 'new
 Private Const HWND_NOTOPMOST = -2
 Attribute HWND_NOTOPMOST.VB_VarHelpID = -1
 
-Private Sub ClickThru(Frm As Form, bEnabled As Boolean)
+Private Sub ClickThru(frm As Form, bEnabled As Boolean)
     If bEnabled = True Then ' enable click-thru form
-        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
+        SetWindowLong frm.hwnd, GWL_EXSTYLE, GetWindowLong(frm.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
     Else ' disable click thru
-        SetWindowLong Frm.hwnd, GWL_EXSTYLE, GetWindowLong(Frm.hwnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
+        SetWindowLong frm.hwnd, GWL_EXSTYLE, GetWindowLong(frm.hwnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
     End If
 End Sub
 
 Private Sub Form_Load()
     'Set values to the variable
+    frmSysTray.STATE_SCREEN = True
     SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
     
     'Shortcut label
-    lblInfo.Visible = frmSysTray.L_SHORTCUTS
+    lblInfo.Visible = frmSysTray.STATE_SCREEN
     lblInfo.Caption = "Lower-Brightness: " + frmSysTray.tb & vbNewLine & "Raise-Brightness: " + frmSysTray.ts
-    lblInfo.Top = WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height
-    lblInfo.Left = WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width
     
     'Black screen settings
     Me.BackColor = vbBlack
@@ -127,11 +134,21 @@ Private Sub Form_Load()
     SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
     
     ClickThru Me, True 'Enable click-thru formulario
+    If Me.Visible = True Then
+        Timer1.Enabled = True
+        Timer2.Enabled = True
+    End If
+End Sub
+
+Private Sub Form_Paint()
+    SetOnTop Me, True
+    lblInfo.Visible = frmSysTray.STATE_SCREEN
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
 End Sub
 
 Private Sub Form_Resize()
     lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120
-    lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 120
+    lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 800
 End Sub
 
 Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -142,7 +159,9 @@ Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
     'End If
 End Sub
 
-Private Sub Timer1_Timer()
-    lblInfo.Visible = frmSysTray.L_SHORTCUTS
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+Private Sub Form_Unload(Cancel As Integer)
+    frmSysTray.STATE_SCREEN = False
+    Timer1.Enabled = False
+    Timer2.Enabled = False
 End Sub
+

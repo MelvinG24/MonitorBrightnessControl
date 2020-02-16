@@ -16,23 +16,9 @@ Begin VB.Form frmSysTray
    ScaleWidth      =   112
    ShowInTaskbar   =   0   'False
    Begin VB.Timer tmr 
-      Enabled         =   0   'False
       Interval        =   200
       Left            =   240
       Top             =   120
-   End
-   Begin VB.PictureBox pic 
-      AutoRedraw      =   -1  'True
-      BackColor       =   &H00FF00FF&
-      BorderStyle     =   0  'None
-      Height          =   480
-      Left            =   840
-      ScaleHeight     =   32
-      ScaleMode       =   3  'Pixel
-      ScaleWidth      =   32
-      TabIndex        =   0
-      Top             =   120
-      Width           =   480
    End
    Begin VB.Menu mPopupMenuMain 
       Caption         =   "SysTray"
@@ -95,7 +81,7 @@ Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 Public M_BRIGHTNESS As Integer
-Public L_SHORTCUTS As Boolean
+Public STATE_SCREEN As Boolean
 Public tb As String
 Public ts As String
 
@@ -103,27 +89,28 @@ Private Sub Form_Load()
     tb = "F5"
     ts = "F6"
     M_BRIGHTNESS = 128
-    L_SHORTCUTS = True
+    STATE_SCREEN = True
+    'STATE_SCREEN = GetSetting("vbMonitorBrightnessControl", "Settings", "ScreenLabel", 0)
     
     Set SysTray = New clsSysTray
     Me.WindowState = 1
     DoEvents
     Me.Hide
     SysTray.Init Me, "Monitor Brightness Control"
-    If Me.mPopupMenu(2).Checked = True Then
+    If STATE_SCREEN = True Then
         frmMain.Show
     End If
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    Set SysTray = Nothing
+    Dim frm As Form
+    For Each frm In Forms
+        Unload frm
+        Set frm = Nothing
+    Next frm
 End Sub
 
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SysTray.MouseMove Button, X, Me
-End Sub
-
-Private Sub pic_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     SysTray.MouseMove Button, X, Me
 End Sub
 
@@ -133,23 +120,29 @@ Private Sub mPopupMenu_Click(Index As Integer)
             If frmControl.Visible = True Then
                 Unload frmControl
             End If
-                frmAbout.Show 0, frmMain
+                If frmMain.Visible = True Then
+                    frmAbout.Show 0, frmMain
+                Else
+                    frmAbout.Show
+                End If
         Case "On/Off":
-            If Me.mPopupMenu(Index).Checked = True Then
+            If STATE_SCREEN = True Then
                 Me.mPopupMenu(Index).Checked = False
+                STATE_SCREEN = False
                 Unload frmMain
-            Else
+            ElseIf STATE_SCREEN = False Then
                 Me.mPopupMenu(Index).Checked = True
+                STATE_SCREEN = True
                 frmMain.Show
                 frmMain.ZOrder 0
             End If
-        Case "Config": frmConfig.Show 1, frmMain
-        Case "Exit":
-            Dim Frm As Form
-            For Each Frm In Forms
-                Unload Frm
-                Set Frm = Nothing
-            Next Frm
+        Case "Config":
+            If frmMain.Visible = True Then
+                frmConfig.Show 0, frmMain
+            Else
+                frmConfig.Show
+            End If
+        Case "Exit": Unload Me
         Case Else: MsgBox Me.mPopupMenu(Index).Caption
     End Select
 End Sub
@@ -160,10 +153,12 @@ Private Sub SysTray_LeftClick()
     End If
     If frmConfig.Visible = False Then
         If frmControl.Visible = False Then
-            Dim pt As POINTAPI
-            GetCursorPos pt
-            frmControl.Show 0, frmMain
-            frmControl.Move pt.X * Screen.TwipsPerPixelX, (pt.Y * Screen.TwipsPerPixelY) - frmControl.Height
+            frmControl.Show
+            
+            'Dim pt As POINTAPI
+            'GetCursorPos pt
+            'frmControl.Show
+            'frmControl.Move pt.X * Screen.TwipsPerPixelX, (pt.Y * Screen.TwipsPerPixelY) - frmControl.Height
         End If
     Else
         Beep
@@ -175,3 +170,4 @@ End Sub
 Private Sub SysTray_RightClick()
     PopupMenu Me.mPopupMenuMain
 End Sub
+
