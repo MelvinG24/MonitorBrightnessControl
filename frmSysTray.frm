@@ -15,11 +15,6 @@ Begin VB.Form frmSysTray
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   112
    ShowInTaskbar   =   0   'False
-   Begin VB.Timer tmr 
-      Interval        =   200
-      Left            =   240
-      Top             =   120
-   End
    Begin VB.Menu mPopupMenuMain 
       Caption         =   "SysTray"
       Visible         =   0   'False
@@ -82,12 +77,14 @@ Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 Public M_BRIGHTNESS As Integer
 Public STATE_SCREEN As Boolean
-Public tb As String
-Public ts As String
+Public shortCUT As Boolean
+Public rBrightness As String
+Public lBrightness As String
 
 Private Sub Form_Load()
-    tb = "F5"
-    ts = "F6"
+    rBrightness = "Ctrl + Shift + F5"
+    lBrightness = "Ctrl + Shift + F6"
+    shortCUT = True
     M_BRIGHTNESS = 128
     STATE_SCREEN = True
     'STATE_SCREEN = GetSetting("vbMonitorBrightnessControl", "Settings", "ScreenLabel", 0)
@@ -97,9 +94,7 @@ Private Sub Form_Load()
     DoEvents
     Me.Hide
     SysTray.Init Me, "Monitor Brightness Control"
-    If STATE_SCREEN = True Then
-        frmMain.Show
-    End If
+    If STATE_SCREEN Then frmBlackScreen.Show
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -120,8 +115,8 @@ Private Sub mPopupMenu_Click(Index As Integer)
             If frmControl.Visible = True Then
                 Unload frmControl
             End If
-                If frmMain.Visible = True Then
-                    frmAbout.Show 0, frmMain
+                If frmBlackScreen.Visible = True Then
+                    frmAbout.Show 0, frmBlackScreen
                 Else
                     frmAbout.Show
                 End If
@@ -129,16 +124,16 @@ Private Sub mPopupMenu_Click(Index As Integer)
             If STATE_SCREEN = True Then
                 Me.mPopupMenu(Index).Checked = False
                 STATE_SCREEN = False
-                Unload frmMain
+                Unload frmBlackScreen
             ElseIf STATE_SCREEN = False Then
                 Me.mPopupMenu(Index).Checked = True
                 STATE_SCREEN = True
-                frmMain.Show
-                frmMain.ZOrder 0
+                frmBlackScreen.Show
+                frmBlackScreen.ZOrder 0
             End If
         Case "Config":
-            If frmMain.Visible = True Then
-                frmConfig.Show 0, frmMain
+            If frmBlackScreen.Visible = True Then
+                frmConfig.Show 0, frmBlackScreen
             Else
                 frmConfig.Show
             End If
@@ -168,6 +163,10 @@ Private Sub SysTray_LeftClick()
 End Sub
 
 Private Sub SysTray_RightClick()
+    If STATE_SCREEN Then
+        Me.mPopupMenu(2).Checked = True
+    Else
+        Me.mPopupMenu(2).Checked = False
+    End If
     PopupMenu Me.mPopupMenuMain
 End Sub
-

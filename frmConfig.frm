@@ -125,7 +125,7 @@ Begin VB.Form frmConfig
          Cancel          =   -1  'True
          Caption         =   "Change"
          Height          =   375
-         Left            =   2230
+         Left            =   1800
          TabIndex        =   3
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   1065
@@ -143,7 +143,7 @@ Begin VB.Form frmConfig
       Begin VB.CommandButton btnChangeBrightUp 
          Caption         =   "Change"
          Height          =   375
-         Left            =   2230
+         Left            =   1800
          TabIndex        =   1
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   450
@@ -171,11 +171,10 @@ Begin VB.Form frmConfig
             Strikethrough   =   0   'False
          EndProperty
          Height          =   375
-         Left            =   3000
+         Left            =   2520
          TabIndex        =   4
-         Text            =   "Alt F6"
          Top             =   1065
-         Width           =   2000
+         Width           =   2475
       End
       Begin VB.TextBox txtBrightUp 
          Appearance      =   0  'Flat
@@ -190,11 +189,10 @@ Begin VB.Form frmConfig
             Strikethrough   =   0   'False
          EndProperty
          Height          =   375
-         Left            =   3000
+         Left            =   2520
          TabIndex        =   2
-         Text            =   "Shift F5"
          Top             =   450
-         Width           =   2000
+         Width           =   2475
       End
       Begin VB.Line Line2 
          BorderColor     =   &H8000000A&
@@ -345,18 +343,25 @@ End Sub
 Private Sub Form_Load()
     frmRounded Me
     lScreen = frmSysTray.STATE_SCREEN
+    txtBrightUp.Text = frmSysTray.rBrightness
+    txtBrightDown.Text = frmSysTray.lBrightness
     If Me.Visible = True Then
-        frmMain.Timer2.Enabled = False
+        frmBlackScreen.Timer2.Enabled = False
         If lScreen Then
             chLabel.Value = 1
         Else
             chLabel.Value = 0
         End If
     End If
+    If Me.Visible = True Then Me.SetFocus
+End Sub
+
+Private Sub Form_LostFocus()
+    Unload Me
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    frmMain.Timer2.Enabled = True
+    frmBlackScreen.Timer2.Enabled = True
 End Sub
 
 Private Sub shHoldFrm_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)

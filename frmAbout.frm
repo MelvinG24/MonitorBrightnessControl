@@ -205,7 +205,7 @@ Private Sub Form_Load()
     lblDeveloper.Caption = "Development by: " & App.CompanyName
     lblWWW.Caption = App.Comments
     If Me.Visible = True Then
-        frmMain.Timer2.Enabled = False
+        frmBlackScreen.Timer2.Enabled = False
         Timer2.Enabled = True
     End If
 End Sub
@@ -299,7 +299,7 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    frmMain.Timer2.Enabled = False
+    frmBlackScreen.Timer2.Enabled = False
     Timer2.Enabled = False
     Timer1.Enabled = False
 End Sub
