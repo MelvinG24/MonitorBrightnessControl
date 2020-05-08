@@ -23,7 +23,7 @@ Begin VB.Form frmAbout
    End
    Begin VB.Timer Timer1 
       Enabled         =   0   'False
-      Interval        =   1
+      Interval        =   100
       Left            =   0
       Top             =   0
    End
@@ -58,7 +58,7 @@ Begin VB.Form frmAbout
       Top             =   3555
       Width           =   1485
    End
-   Begin VB.Image Image2 
+   Begin VB.Image imgAppLogo 
       Height          =   1215
       Left            =   2290
       Picture         =   "frmAbout.frx":83DA
@@ -66,7 +66,7 @@ Begin VB.Form frmAbout
       Top             =   120
       Width           =   1245
    End
-   Begin VB.Image Image1 
+   Begin VB.Image imgLicense 
       Height          =   540
       Left            =   202
       Picture         =   "frmAbout.frx":5D2FA
@@ -76,16 +76,19 @@ Begin VB.Form frmAbout
    End
    Begin VB.Label lblWWW 
       Alignment       =   1  'Right Justify
-      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
       Caption         =   "Label1"
-      Height          =   195
-      Left            =   5280
+      Height          =   315
+      Left            =   3000
+      MouseIcon       =   "frmAbout.frx":5DD6E
+      MousePointer    =   99  'Custom
       TabIndex        =   8
       Top             =   2520
-      Width           =   480
+      Width           =   2760
    End
    Begin VB.Label lblDeveloper 
       AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
       Caption         =   "Label1"
       Height          =   195
       Left            =   160
@@ -93,10 +96,9 @@ Begin VB.Form frmAbout
       Top             =   2520
       Width           =   480
    End
-   Begin VB.Line Line1 
+   Begin VB.Line Line 
       BorderColor     =   &H00808080&
       BorderStyle     =   6  'Inside Solid
-      Index           =   1
       X1              =   112.686
       X2              =   5408.938
       Y1              =   1987.827
@@ -104,6 +106,7 @@ Begin VB.Form frmAbout
    End
    Begin VB.Label lblDescription 
       Alignment       =   2  'Center
+      BackStyle       =   0  'Transparent
       Caption         =   "Descripción de la aplicación"
       ForeColor       =   &H00000000&
       Height          =   435
@@ -134,6 +137,7 @@ Begin VB.Form frmAbout
    End
    Begin VB.Label lblVersion 
       AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
       Caption         =   "Versión"
       Height          =   195
       Left            =   1438
@@ -196,17 +200,21 @@ Private Sub cmdOK_Click()
   Unload Me
 End Sub
 
-Private Sub Form_Load()
-    ActiveApp = 0
-    Me.Caption = "About: " & App.Title
-    lblVersion.Caption = "Versión " & App.Major & "." & App.Minor
-    lblTitle.Caption = App.Title
-    lblDescription.Caption = App.Title & App.FileDescription
-    lblDeveloper.Caption = "Development by: " & App.CompanyName
-    lblWWW.Caption = App.Comments
-    If Me.Visible = True Then
-        frmBlackScreen.Timer2.Enabled = False
-        Timer2.Enabled = True
+Private Sub Form_Activate()
+    If Me.Visible Then
+        ActiveApp = 0
+        Me.Caption = "About: " & App.Title
+        lblVersion.Caption = "Versión " & App.Major & "." & App.Minor & "." & App.Revision
+        lblTitle.Caption = App.Title
+        lblDescription.Caption = App.Title & App.FileDescription
+        lblDeveloper.Caption = "Development by: " & App.CompanyName
+        With lblWWW
+            .Caption = App.Comments
+            .Tag = .Caption
+            .ForeColor = vbBlue
+        End With
+        Timer1.Enabled = True
+        timerOnOff False
     End If
 End Sub
 
@@ -299,9 +307,34 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    frmBlackScreen.Timer2.Enabled = False
-    Timer2.Enabled = False
     Timer1.Enabled = False
+    Timer2.Enabled = False
+    timerOnOff True
+End Sub
+
+Private Sub lblWWW_DragDrop(Source As Control, X As Single, Y As Single)
+    If Source Is lblWWW Then
+        With lblWWW
+            Call HuperJump(.Tag)
+            .Font.Underline = False
+        End With
+    End If
+End Sub
+
+Private Sub lblWWW_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
+    If State = vbLeave Then
+        With lblWWW
+            .Drag vbEndDrag
+            .Font.Underline = False
+        End With
+    End If
+End Sub
+
+Private Sub lblWWW_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    With lblWWW
+        .Font.Underline = True
+        .Drag vbBeginDrag
+    End With
 End Sub
 
 Private Sub Timer1_Timer()
@@ -310,7 +343,6 @@ Private Sub Timer1_Timer()
     End If
     
     If GetActiveWindow <> ActiveApp Then
-        Timer1.Enabled = False
         ActiveApp = 0
         Unload Me
     End If

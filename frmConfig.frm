@@ -1,56 +1,34 @@
 VERSION 5.00
 Begin VB.Form frmConfig 
-   Appearance      =   0  'Flat
-   BackColor       =   &H80000005&
-   BorderStyle     =   0  'None
+   BorderStyle     =   1  'Fixed Single
    Caption         =   "Configurations"
    ClientHeight    =   4560
-   ClientLeft      =   0
-   ClientTop       =   0
-   ClientWidth     =   6570
+   ClientLeft      =   45
+   ClientTop       =   375
+   ClientWidth     =   5550
    Icon            =   "frmConfig.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4560
-   ScaleWidth      =   6570
-   ShowInTaskbar   =   0   'False
+   ScaleWidth      =   5550
    StartUpPosition =   2  'CenterScreen
    WhatsThisButton =   -1  'True
    WhatsThisHelp   =   -1  'True
-   Begin VB.PictureBox shHoldFrm 
-      Appearance      =   0  'Flat
-      BackColor       =   &H00404040&
-      BorderStyle     =   0  'None
-      ForeColor       =   &H80000008&
-      Height          =   345
-      Left            =   100
-      MouseIcon       =   "frmConfig.frx":7F6A
-      MousePointer    =   99  'Custom
-      ScaleHeight     =   345
-      ScaleWidth      =   705
-      TabIndex        =   14
-      ToolTipText     =   "Hold to move the form"
-      Top             =   3960
-      Width           =   705
-      Begin VB.Shape shLines 
-         BorderStyle     =   0  'Transparent
-         FillColor       =   &H00808080&
-         FillStyle       =   2  'Horizontal Line
-         Height          =   345
-         Left            =   0
-         Top             =   0
-         Width           =   705
-      End
+   Begin VB.CheckBox chEnableSC 
+      Caption         =   "Enable"
+      Height          =   495
+      Left            =   4440
+      TabIndex        =   1
+      Top             =   0
+      Value           =   1  'Checked
+      Width           =   855
    End
    Begin VB.CheckBox chLabel 
-      Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
       Caption         =   "On/Off on-screen shortcuts label"
-      ForeColor       =   &H80000008&
       Height          =   255
-      Left            =   1320
-      TabIndex        =   9
+      Left            =   360
+      TabIndex        =   10
       Top             =   3960
       Value           =   1  'Checked
       Width           =   2775
@@ -58,43 +36,34 @@ Begin VB.Form frmConfig
    Begin VB.CommandButton btnDone 
       Caption         =   "Done"
       Height          =   495
-      Left            =   5160
-      TabIndex        =   10
+      Left            =   4200
+      TabIndex        =   11
       ToolTipText     =   "Save all changes"
       Top             =   3840
       Width           =   1215
    End
    Begin VB.Frame Frame2 
-      Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
-      ForeColor       =   &H80000008&
       Height          =   975
-      Left            =   1080
-      TabIndex        =   13
+      Left            =   120
+      TabIndex        =   14
       Top             =   2640
       Width           =   5295
       Begin VB.CheckBox chOnOff 
-         Appearance      =   0  'Flat
-         BackColor       =   &H80000005&
-         Caption         =   "By default start black screen ON"
+         Caption         =   "When program star run black-screen = ON"
          Enabled         =   0   'False
-         ForeColor       =   &H80000008&
          Height          =   255
          Left            =   720
-         TabIndex        =   8
+         TabIndex        =   9
          Top             =   600
-         Width           =   2655
+         Width           =   4335
       End
       Begin VB.CheckBox chStartUp 
-         Appearance      =   0  'Flat
-         BackColor       =   &H80000005&
-         Caption         =   "Start-Up automatly with MS Windows"
-         ForeColor       =   &H80000008&
+         Caption         =   "Start-Up program with MS Windows"
          Height          =   195
          Left            =   240
-         TabIndex        =   7
+         TabIndex        =   8
          Top             =   240
-         Width           =   4695
+         Width           =   4815
       End
       Begin VB.Line Line4 
          BorderStyle     =   3  'Dot
@@ -112,12 +81,9 @@ Begin VB.Form frmConfig
       End
    End
    Begin VB.Frame Frame1 
-      Appearance      =   0  'Flat
-      BackColor       =   &H80000005&
       Caption         =   "Brightness Shortcuts"
-      ForeColor       =   &H80000008&
       Height          =   2415
-      Left            =   1080
+      Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   5295
@@ -126,7 +92,7 @@ Begin VB.Form frmConfig
          Caption         =   "Change"
          Height          =   375
          Left            =   1800
-         TabIndex        =   3
+         TabIndex        =   4
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   1065
          Width           =   765
@@ -135,7 +101,7 @@ Begin VB.Form frmConfig
          Caption         =   "Save"
          Height          =   375
          Left            =   3960
-         TabIndex        =   6
+         TabIndex        =   7
          ToolTipText     =   "Save shortcuts settings"
          Top             =   1800
          Width           =   1000
@@ -144,7 +110,7 @@ Begin VB.Form frmConfig
          Caption         =   "Change"
          Height          =   375
          Left            =   1800
-         TabIndex        =   1
+         TabIndex        =   2
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   450
          Width           =   765
@@ -153,7 +119,7 @@ Begin VB.Form frmConfig
          Caption         =   "Reset"
          Height          =   375
          Left            =   240
-         TabIndex        =   5
+         TabIndex        =   6
          ToolTipText     =   "Reset shortcuts setting to their defaults values"
          Top             =   1800
          Width           =   1000
@@ -172,7 +138,7 @@ Begin VB.Form frmConfig
          EndProperty
          Height          =   375
          Left            =   2520
-         TabIndex        =   4
+         TabIndex        =   5
          Top             =   1065
          Width           =   2475
       End
@@ -190,9 +156,17 @@ Begin VB.Form frmConfig
          EndProperty
          Height          =   375
          Left            =   2520
-         TabIndex        =   2
+         TabIndex        =   3
          Top             =   450
          Width           =   2475
+      End
+      Begin VB.Shape Shape1 
+         FillStyle       =   5  'Downward Diagonal
+         Height          =   2415
+         Left            =   0
+         Top             =   0
+         Visible         =   0   'False
+         Width           =   5295
       End
       Begin VB.Line Line2 
          BorderColor     =   &H8000000A&
@@ -202,9 +176,7 @@ Begin VB.Form frmConfig
          Y2              =   1680
       End
       Begin VB.Label Label2 
-         Appearance      =   0  'Flat
          AutoSize        =   -1  'True
-         BackColor       =   &H80000005&
          Caption         =   "Bright-Down"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -215,10 +187,9 @@ Begin VB.Form frmConfig
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H80000008&
          Height          =   240
          Left            =   240
-         TabIndex        =   12
+         TabIndex        =   13
          Top             =   1120
          Width           =   1080
       End
@@ -230,9 +201,7 @@ Begin VB.Form frmConfig
          Y2              =   960
       End
       Begin VB.Label Label1 
-         Appearance      =   0  'Flat
          AutoSize        =   -1  'True
-         BackColor       =   &H80000005&
          Caption         =   "Bright-Up"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -243,40 +212,12 @@ Begin VB.Form frmConfig
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H80000008&
          Height          =   240
          Left            =   240
-         TabIndex        =   11
+         TabIndex        =   12
          Top             =   500
          Width           =   840
       End
-   End
-   Begin VB.Shape shActiveOp 
-      BackColor       =   &H0000FFFF&
-      BackStyle       =   1  'Opaque
-      BorderStyle     =   0  'Transparent
-      Height          =   500
-      Left            =   800
-      Top             =   200
-      Width           =   100
-   End
-   Begin VB.Image imgGear 
-      Appearance      =   0  'Flat
-      Height          =   400
-      Left            =   250
-      Picture         =   "frmConfig.frx":80BC
-      Stretch         =   -1  'True
-      Top             =   250
-      Width           =   400
-   End
-   Begin VB.Shape shBorder 
-      BackColor       =   &H00404040&
-      BackStyle       =   1  'Opaque
-      BorderStyle     =   0  'Transparent
-      Height          =   4560
-      Left            =   0
-      Top             =   0
-      Width           =   900
    End
 End
 Attribute VB_Name = "frmConfig"
@@ -285,11 +226,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim lScreen As Boolean
-
-Private Declare Sub ReleaseCapture Lib "user32" ()
-Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, ByVal lParam As Long) As Long
 
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
@@ -309,23 +245,36 @@ End Sub
 Private Sub btnDone_Click()
     'Check if the shortcut match with the preview shortcut
     'If they do not match and it still not saved, show a msgbox asking for saving
-    'SaveSetting "vbMonitorBrightnessControl", "Settings", "ScreenLabel", lScreen
-    'SaveSetting "CounterApp", "Counts", "LastTime", Now
     Unload Me
 End Sub
 
 Private Sub btnReset_Click()
-    txtBrightUp.Text = "Ctrl + Shift + F5"
+    txtBrightUp.Text = rB_SC
     txtBrightUp.Enabled = False
-    txtBrightDown.Text = "Ctrl + Alt + F6"
+    txtBrightDown.Text = lB_SC
     txtBrightDown.Enabled = False
+    
+    rBrightness = txtBrightUp.Text
+    lBrightness = txtBrightDown.Text
+End Sub
+
+Private Sub chEnableSC_Click()
+    If chEnableSC.Value Then
+        Frame1.Enabled = True
+        Shape1.Visible = False
+    Else
+        Frame1.Enabled = False
+        Shape1.Visible = True
+    End If
 End Sub
 
 Private Sub chLabel_Click()
     If chLabel.Value = 1 Then
-        lScreen = True
+        frmMain.lblInfo.Visible = True
+        SHOW_SHORTCUTS = True
     ElseIf chLabel.Value = 0 Then
-        lScreen = False
+        frmMain.lblInfo.Visible = False
+        SHOW_SHORTCUTS = False
     End If
 End Sub
 
@@ -340,20 +289,17 @@ Private Sub chStartUp_Click()
     End If
 End Sub
 
-Private Sub Form_Load()
-    frmRounded Me
-    lScreen = frmSysTray.STATE_SCREEN
-    txtBrightUp.Text = frmSysTray.rBrightness
-    txtBrightDown.Text = frmSysTray.lBrightness
-    If Me.Visible = True Then
-        frmBlackScreen.Timer2.Enabled = False
-        If lScreen Then
-            chLabel.Value = 1
-        Else
-            chLabel.Value = 0
-        End If
+Private Sub Form_Activate()
+    txtBrightUp.Text = rBrightness
+    txtBrightDown.Text = lBrightness
+    
+    If SHOW_SHORTCUTS Then
+        chLabel.Value = 1
+    Else
+        chLabel.Value = 0
     End If
-    If Me.Visible = True Then Me.SetFocus
+    
+    If Me.Visible Then timerOnOff False
 End Sub
 
 Private Sub Form_LostFocus()
@@ -361,19 +307,9 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    frmBlackScreen.Timer2.Enabled = True
-End Sub
-
-Private Sub shHoldFrm_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    Formulario Me
+    timerOnOff True
 End Sub
 
 Private Sub txtBrightUp_GotFocus()
     'SysTray.ShowBalloonTip "Press your shortcut combination now", beInformation, "Tip"
 End Sub
-
-Public Sub Formulario(frm As Form)
-    ReleaseCapture
-    Call SendMessage(frm.hwnd, &HA1, 2, 0&)
-End Sub
-

@@ -1,10 +1,10 @@
 VERSION 5.00
-Begin VB.Form frmBlackScreen 
+Begin VB.Form frmMain 
    BorderStyle     =   0  'None
    Caption         =   "Form1"
    ClientHeight    =   3030
-   ClientLeft      =   0
-   ClientTop       =   0
+   ClientLeft      =   90
+   ClientTop       =   13020
    ClientWidth     =   4560
    ClipControls    =   0   'False
    ControlBox      =   0   'False
@@ -12,10 +12,8 @@ Begin VB.Form frmBlackScreen
    ScaleHeight     =   3030
    ScaleWidth      =   4560
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
    WindowState     =   2  'Maximized
    Begin VB.Timer Timer2 
-      Enabled         =   0   'False
       Interval        =   100
       Left            =   1800
       Top             =   0
@@ -25,6 +23,16 @@ Begin VB.Form frmBlackScreen
       Interval        =   100
       Left            =   1320
       Top             =   0
+   End
+   Begin VB.Label position 
+      AutoSize        =   -1  'True
+      Caption         =   "lblPosition"
+      Height          =   195
+      Left            =   1680
+      TabIndex        =   1
+      Top             =   1320
+      Visible         =   0   'False
+      Width           =   705
    End
    Begin VB.Label lblInfo 
       AutoSize        =   -1  'True
@@ -47,38 +55,33 @@ Begin VB.Form frmBlackScreen
       Width           =   810
    End
 End
-Attribute VB_Name = "frmBlackScreen"
+Attribute VB_Name = "frmMain"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Dim WindowRect As RECT
-
-Private Declare Function SystemParametersInfo Lib "user32" Alias "SystemParametersInfoA" ( _
-                ByVal uAction As Long, _
-                ByVal uParam As Long, _
-                ByRef lpvParam As Any, _
-                ByVal fuWinIni As Long) As Long
+Dim activeWin As Long
+Dim retVal As Long
 
 Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal nIndex As Long) As Long
- 
+
 Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal nIndex As Long, _
                 ByVal dwNewLong As Long) As Long
-                
+
 Private Declare Function SetLayeredWindowAttributes Lib "user32" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal crKey As Long, _
                 ByVal bAlpha As Byte, _
                 ByVal dwFlags As Long) As Long
 
 Private Declare Function SetWindowPos Lib "user32" ( _
-                ByVal hwnd As Long, _
+                ByVal hWnd As Long, _
                 ByVal hWndInsertAfter As Long, _
                 ByVal X As Long, _
                 ByVal Y As Long, _
@@ -86,82 +89,58 @@ Private Declare Function SetWindowPos Lib "user32" ( _
                 ByVal cy As Long, _
                 ByVal wFlags As Long) As Long
 
-Private Type RECT
-    Left As Long
-    Top As Long
-    Right As Long
-    Bottom As Long
-End Type
+Private Declare Function GetTopWindow Lib "user32" ( _
+                ByVal hWnd As Long) As Long
 
-Private Const WS_EX_COMPOSITED = &H2
-Private Const SPI_GETWORKAREA = 48
-Private Const GWL_STYLE = (-16)
 Private Const GWL_EXSTYLE = (-20)
-Private Const WS_EX_LAYERED = &H80000
-Private Const WS_EX_TRANSPARENT = &H20&         'new
-Private Const LWA_COLORKEY = &H1
-Private Const LWA_ALPHA = &H2
-Private Const SWP_NOMOVE As Long = &H2
-Private Const SWP_NOSIZE As Long = &H1
-Private Const FLAGS = SWP_NOMOVE + SWP_NOSIZE
-Private Const HWND_TOPMOST = -1                 'new
+Private Const GWL_STYLE = (-16)
 Private Const HWND_NOTOPMOST = -2
-Attribute HWND_NOTOPMOST.VB_VarHelpID = -1
+Private Const HWND_TOPMOST = -1
+Private Const LWA_ALPHA = &H2
+Private Const LWA_COLORKEY = &H1
+Private Const SWP_NOMOVE = &H2
+Private Const SWP_NOSIZE = &H1
+Private Const TOPMOST_FLAGS = SWP_NOMOVE Or SWP_NOSIZE
+Private Const WS_EX_LAYERED = &H80000
+Private Const WS_EX_TRANSPARENT = &H20&
 
-Private Sub ClickThru(frm As Form, bEnabled As Boolean)
-    If bEnabled = True Then ' enable click-thru form
-        SetWindowLong frm.hwnd, GWL_EXSTYLE, GetWindowLong(frm.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
-    Else ' disable click thru
-        SetWindowLong frm.hwnd, GWL_EXSTYLE, GetWindowLong(frm.hwnd, GWL_EXSTYLE) And Not WS_EX_TRANSPARENT
-    End If
+Private Sub SetWinToTOP()
+    SetWindowPos Me.hWnd, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS
 End Sub
 
 Private Sub Form_Load()
-    'Set values to the variable
-    frmSysTray.STATE_SCREEN = True
-    SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
+    'Set shortcut label
+    lblInfo.Visible = SHOW_SHORTCUTS
+    lblInfo.Caption = "Raise-Brightness: " + rBrightness & vbNewLine & "Lower-Brightness: " + lBrightness
     
-    'Shortcut label
-    lblInfo.Visible = frmSysTray.STATE_SCREEN
-    lblInfo.Caption = "Raise-Brightness: " + frmSysTray.rBrightness & vbNewLine & "Lower-Brightness: " + frmSysTray.lBrightness
-    
-    'Black screen settings
+    'Set window color
     Me.BackColor = vbBlack
     
-    SetWindowPos Me.hwnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS 'Set formulario always on top
-    SetWindowLong Me.hwnd, GWL_EXSTYLE, WS_EX_LAYERED
-    'SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_LAYERED
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+    'Set window transparency
+    SetWindowLong Me.hWnd, GWL_EXSTYLE, WS_EX_LAYERED
     
-    ClickThru Me, True 'Enable click-thru formulario
-    If Me.Visible = True Then
-        Timer1.Enabled = True
-        Timer2.Enabled = True
-    End If
-End Sub
-
-Private Sub Form_Paint()
-    SetOnTop Me, True
-    lblInfo.Visible = frmSysTray.STATE_SCREEN
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, frmSysTray.M_BRIGHTNESS, LWA_ALPHA
+    'Set window click-through enable
+    SetWindowLong Me.hWnd, GWL_EXSTYLE, GetWindowLong(Me.hWnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
+    
+    'Set window transparency percentage
+    SetLayeredWindowAttributes Me.hWnd, vbBlack, M_BRIGHTNESS, LWA_ALPHA
+    
+    'Set main windows position to the top
+    SetWinToTOP
 End Sub
 
 Private Sub Form_Resize()
     lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120
-    lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 800
+    lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 1320
 End Sub
 
-Private Sub sliderControl_KeyDown(KeyCode As Integer, Shift As Integer)
-    'If KeyCode = 116 Then
-    '    sliderControl.Value = sliderControl.Value - 10
-    'ElseIf KeyCode = 117 Then
-    '    sliderControl.Value = sliderControl.Value + 10
-    'End If
+Private Sub Timer1_Timer()
+    SetLayeredWindowAttributes Me.hWnd, vbBlack, M_BRIGHTNESS, LWA_ALPHA
 End Sub
 
-Private Sub Form_Unload(Cancel As Integer)
-    frmSysTray.STATE_SCREEN = False
-    Timer1.Enabled = False
-    Timer2.Enabled = False
+Private Sub Timer2_Timer()
+    activeWin = GetTopWindow(Me.hWnd)
+    If activeWin <> Me.hWnd Then
+        SetWinToTOP
+    End If
 End Sub
-
