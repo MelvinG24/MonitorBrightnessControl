@@ -13,6 +13,12 @@ Begin VB.Form frmMain
    ScaleWidth      =   4560
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
+   Begin VB.Timer Timer3 
+      Enabled         =   0   'False
+      Interval        =   1500
+      Left            =   2280
+      Top             =   0
+   End
    Begin VB.Timer Timer2 
       Interval        =   100
       Left            =   1800
@@ -62,6 +68,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Dim Repeticiones As Integer
 Dim activeWin As Long
 Dim retVal As Long
 
@@ -108,7 +115,20 @@ Private Sub SetWinToTOP()
     SetWindowPos Me.hWnd, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS
 End Sub
 
+Private Sub Form_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 27 Then
+        Repeticiones = Repeticiones + 1
+        If Timer3.Enabled = False Then Timer3.Enabled = True
+        If Repeticiones >= 3 Then OnOffSwitch 2
+    Else
+        Repeticiones = 0
+    End If
+End Sub
+
 Private Sub Form_Load()
+    'Set Repeticiones to 0
+    Repeticiones = 0
+    
     'Set shortcut label
     lblInfo.Visible = SHOW_SHORTCUTS
     lblInfo.Caption = "Raise-Brightness: " + rBrightness & vbNewLine & "Lower-Brightness: " + lBrightness
@@ -142,5 +162,12 @@ Private Sub Timer2_Timer()
     activeWin = GetTopWindow(Me.hWnd)
     If activeWin <> Me.hWnd Then
         SetWinToTOP
+    End If
+End Sub
+
+Private Sub Timer3_Timer()
+    If Not Repeticiones >= 3 Then
+        Repeticiones = 0
+        Timer3.Enabled = False
     End If
 End Sub

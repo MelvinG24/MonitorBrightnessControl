@@ -25,12 +25,17 @@ Public Declare Function SystemParametersInfo Lib "user32" Alias "SystemParameter
                 ByVal fuWinIni As Long) As Long
                 
 Public Const SPI_GETWORKAREA = 48
+
 Public Const rB_SC As String = "Ctrl + Shift + F5"
 Public Const lB_SC As String = "Ctrl + Shift + F6"
+
 Public M_BRIGHTNESS As Integer
 Public SHOW_SHORTCUTS As Boolean
 Public rBrightness As String
 Public lBrightness As String
+
+Public chckRunAtStartUp As Integer
+Public chckRunAfter As Integer
 
 Private Sub Main()
     If App.PrevInstance Then Exit Sub
@@ -39,6 +44,15 @@ Private Sub Main()
     lBrightness = lB_SC
     M_BRIGHTNESS = 128
     SHOW_SHORTCUTS = True
+    
+    m_IgnoreEvents = True
+    If StartUp(App.EXEName) Then
+        chckRunAtStartUp = 1
+    Else
+        chckRunAtStartUp = 0
+        chckRunAfter = 0
+    End If
+    m_IgnoreEvents = False
     
     'Get monitor work area size -without taskbar or desktop toolbars obstruction
     SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
@@ -53,6 +67,7 @@ End Sub
 Public Function showAbout()
     If frmControl.Visible Then Unload frmControl
     If frmMain.Visible Then
+        timerOnOff False
         frmAbout.Show 1, frmMain
     Else
         frmAbout.Show
@@ -74,6 +89,7 @@ Public Function showControl()
     If frmConfig.Visible = False Then
         If frmControl.Visible = False Then
             If frmMain.Visible Then
+                timerOnOff False
                 frmControl.Show 1, frmMain
             Else
                 frmControl.Show

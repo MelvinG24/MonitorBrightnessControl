@@ -214,7 +214,6 @@ Private Sub Form_Activate()
             .ForeColor = vbBlue
         End With
         Timer1.Enabled = True
-        timerOnOff False
     End If
 End Sub
 
@@ -312,7 +311,7 @@ Private Sub Form_Unload(Cancel As Integer)
     timerOnOff True
 End Sub
 
-Private Sub lblWWW_DragDrop(Source As Control, X As Single, Y As Single)
+Private Sub lblWWW_DragDrop(Source As Control, x As Single, Y As Single)
     If Source Is lblWWW Then
         With lblWWW
             Call HuperJump(.Tag)
@@ -321,7 +320,7 @@ Private Sub lblWWW_DragDrop(Source As Control, X As Single, Y As Single)
     End If
 End Sub
 
-Private Sub lblWWW_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
+Private Sub lblWWW_DragOver(Source As Control, x As Single, Y As Single, State As Integer)
     If State = vbLeave Then
         With lblWWW
             .Drag vbEndDrag
@@ -330,7 +329,7 @@ Private Sub lblWWW_DragOver(Source As Control, X As Single, Y As Single, State A
     End If
 End Sub
 
-Private Sub lblWWW_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub lblWWW_MouseMove(Button As Integer, Shift As Integer, x As Single, Y As Single)
     With lblWWW
         .Font.Underline = True
         .Drag vbBeginDrag

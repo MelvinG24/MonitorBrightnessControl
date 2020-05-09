@@ -49,7 +49,7 @@ Begin VB.Form frmConfig
       Top             =   2640
       Width           =   5295
       Begin VB.CheckBox chOnOff 
-         Caption         =   "When program star run black-screen = ON"
+         Caption         =   "When program started run Black-Screen on mode = ON"
          Enabled         =   0   'False
          Height          =   255
          Left            =   720
@@ -87,37 +87,41 @@ Begin VB.Form frmConfig
       TabIndex        =   0
       Top             =   120
       Width           =   5295
-      Begin VB.CommandButton btnChangeBrightDown 
+      Begin VB.CommandButton btnSettings 
          Cancel          =   -1  'True
          Caption         =   "Change"
          Height          =   375
+         Index           =   1
          Left            =   1800
          TabIndex        =   4
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   1065
          Width           =   765
       End
-      Begin VB.CommandButton btnSave 
+      Begin VB.CommandButton btnSettings 
          Caption         =   "Save"
          Height          =   375
+         Index           =   3
          Left            =   3960
          TabIndex        =   7
          ToolTipText     =   "Save shortcuts settings"
          Top             =   1800
          Width           =   1000
       End
-      Begin VB.CommandButton btnChangeBrightUp 
+      Begin VB.CommandButton btnSettings 
          Caption         =   "Change"
          Height          =   375
+         Index           =   0
          Left            =   1800
          TabIndex        =   2
          ToolTipText     =   "Activate shortcut TextBox"
          Top             =   450
          Width           =   765
       End
-      Begin VB.CommandButton btnReset 
+      Begin VB.CommandButton btnSettings 
          Caption         =   "Reset"
          Height          =   375
+         Index           =   2
          Left            =   240
          TabIndex        =   6
          ToolTipText     =   "Reset shortcuts setting to their defaults values"
@@ -230,16 +234,28 @@ Option Explicit
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 
-Private Sub btnChangeBrightDown_Click()
-    txtBrightDown.Enabled = True
-    txtBrightDown.Text = ""
-    txtBrightDown.SetFocus
-End Sub
-
-Private Sub btnChangeBrightUp_Click()
-    txtBrightUp.Enabled = True
-    txtBrightUp.Text = ""
-    txtBrightUp.SetFocus
+Private Sub btnSettings_Click(Index As Integer)
+    Select Case btnSettings(Index).Index
+        Case 0:
+            txtBrightUp.Enabled = True
+            txtBrightUp.Text = ""
+            txtBrightUp.SetFocus
+        Case 1:
+            txtBrightDown.Enabled = True
+            txtBrightDown.Text = ""
+            txtBrightDown.SetFocus
+        Case 2:
+            txtBrightUp.Text = rB_SC
+            txtBrightUp.Enabled = False
+            txtBrightDown.Text = lB_SC
+            txtBrightDown.Enabled = False
+            
+            rBrightness = txtBrightUp.Text
+            lBrightness = txtBrightDown.Text
+        Case 3:
+default:
+        MsgBox "Button do not exists"
+    End Select
 End Sub
 
 Private Sub btnDone_Click()
@@ -248,58 +264,51 @@ Private Sub btnDone_Click()
     Unload Me
 End Sub
 
-Private Sub btnReset_Click()
-    txtBrightUp.Text = rB_SC
-    txtBrightUp.Enabled = False
-    txtBrightDown.Text = lB_SC
-    txtBrightDown.Enabled = False
-    
-    rBrightness = txtBrightUp.Text
-    lBrightness = txtBrightDown.Text
-End Sub
-
 Private Sub chEnableSC_Click()
-    If chEnableSC.Value Then
-        Frame1.Enabled = True
-        Shape1.Visible = False
-    Else
-        Frame1.Enabled = False
-        Shape1.Visible = True
-    End If
+    Dim Check, Index As Integer
+    
+    Check = chEnableSC.Value
+    
+    Frame1.Enabled = Check
+    Shape1.Visible = CBool(Check = 0)
+    For Index = 0 To btnSettings.UBound
+        btnSettings(Index).Enabled = Check
+    Next
 End Sub
 
 Private Sub chLabel_Click()
-    If chLabel.Value = 1 Then
-        frmMain.lblInfo.Visible = True
-        SHOW_SHORTCUTS = True
-    ElseIf chLabel.Value = 0 Then
-        frmMain.lblInfo.Visible = False
-        SHOW_SHORTCUTS = False
-    End If
+    Dim Check As Integer
+    
+    Check = chLabel.Value
+    
+    frmMain.lblInfo.Visible = Check
+    SHOW_SHORTCUTS = Check
 End Sub
 
 Private Sub chStartUp_Click()
-    If chStartUp.Value = 1 Then
-        chStartUp.FontBold = True
-        chOnOff.Enabled = True
-    ElseIf chStartUp.Value = 0 Then
-        chStartUp.FontBold = False
-        chOnOff.Enabled = False
-        chOnOff.Value = 0
-    End If
+    Dim Check As Integer
+    
+    Check = chStartUp.Value
+    
+    chStartUp.FontBold = Check
+    chOnOff.Enabled = Check
+    
+    If chStartUp.Value = 0 Then chOnOff.Value = 0
+    
+    If m_IgnoreEvents Then Exit Sub
+    SetRunAtStartUp App.EXEName, App.Path
 End Sub
 
 Private Sub Form_Activate()
     txtBrightUp.Text = rBrightness
     txtBrightDown.Text = lBrightness
-    
-    If SHOW_SHORTCUTS Then
-        chLabel.Value = 1
-    Else
-        chLabel.Value = 0
-    End If
-    
-    If Me.Visible Then timerOnOff False
+    chStartUp.Value = chckRunAtStartUp
+    chOnOff.Value = chckRunAfter
+'    chLabel.Value = SHOW_SHORTCUTS
+End Sub
+
+Private Sub Form_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 27 Then Unload Me
 End Sub
 
 Private Sub Form_LostFocus()
@@ -310,6 +319,13 @@ Private Sub Form_Unload(Cancel As Integer)
     timerOnOff True
 End Sub
 
-Private Sub txtBrightUp_GotFocus()
-    'SysTray.ShowBalloonTip "Press your shortcut combination now", beInformation, "Tip"
+Private Sub txtBrightUp_KeyDown(KeyCode As Integer, Shift As Integer)
+'    txtBrightUp.Text
+End Sub
+
+Private Sub txtBrightUp_LostFocus()
+    If txtBrightUp.Text = "" Then
+        txtBrightUp.Text = rBrightness
+        txtBrightUp.Enabled = False
+    End If
 End Sub

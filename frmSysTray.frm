@@ -104,6 +104,9 @@ Private Sub SysTray_LeftClick()
 End Sub
 
 Private Sub SysTray_RightClick()
+    If frmAbout.Visible Then Unload frmAbout
+    If frmControl.Visible Then Unload frmControl
+    If frmConfig.Visible Then frmConfig.SetFocus
     PopupMenu Me.mPopupMenuMain
 End Sub
 
