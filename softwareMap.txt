@@ -1,0 +1,21 @@
+MonitorBrightnessControll
+  |
+  |--Forms
+     |--frmSysTray--------(Start-up form, with is the form to show on the Sys.Tray-Bar and the popupmenu)
+     |   |--frmAbout------(Info about the Software)
+     |   |--frmConfig-----(Set of settings such as shortcuts, Language, and others)
+     |   |--frmControl----(brightness level control)
+     |---|--frmMain-------(Black-screen)
+  |
+  |--Modules
+     |--basFrom
+         |--/*Module which have all the main variable of the software such ash shortCut, BrighnessLevel,
+              StartUpWithWindows, RunBlack-Screen, GetSettings, SetSettings, and others*/
+     |--basRegKey---------(Module specify only for manage StartUpWithWindows)
+  |
+  |--ClassModules
+     |--clsSysTray---------(Class specify only for manage all Sys. Tray-Bar settings)
+  |
+  |--RelatedDocuments
+     |--MonitorBrightnessControl.RES
+         --(Resource file whith containt software transcript UI in English and Spanish)

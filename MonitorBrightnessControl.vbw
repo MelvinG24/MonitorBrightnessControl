@@ -1,7 +1,8 @@
-frmMain = 802, 0, 1604, 937, C, 125, 58, 571, 483, C
-frmSysTray = 802, 0, 1604, 937, , 0, 398, 646, 597, C
-frmAbout = 0, 0, 802, 937, C, 25, 25, 471, 450, C
-clsSysTray = 200, 200, 646, 625, Z
-basFrom = 0, 0, 802, 937, C
-frmControl = 0, 299, 646, 598, C, 11, 164, 555, 589, C
-frmConfig = 802, 0, 1604, 937, C, 0, 0, 802, 937, C
+frmMain = 0, 0, 0, 0, C, 50, 50, 380, 671, C
+frmSysTray = 0, 0, 0, 0, C, 25, 25, 355, 646, C
+frmAbout = 0, 0, 0, 0, C, 0, 0, 0, 0, C
+clsSysTray = 0, 0, 0, 0, C
+basFrom = 0, 0, 0, 0, C
+frmControl = 0, 0, 0, 0, C, 75, 75, 405, 696, C
+frmConfig = 0, 0, 0, 0, C, 100, 100, 430, 721, C
+basRegKey = 0, 0, 0, 0, C
