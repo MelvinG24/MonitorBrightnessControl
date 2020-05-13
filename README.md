@@ -11,14 +11,14 @@ This program instead of adjusting directly your monitor brightness and damage yo
 - [x] Black-screen layer
 - [x] Brightness level control
 - [x] Configuration window
-    - [] Customize brightness shortcuts
-    - [] Enable and disable program shortcuts
-    - [] Start-up program with MS-Window
-    - [] Run Black-screen after the program started
+    - [ ] Customize brightness shortcuts
+    - [ ] Enable and disable program shortcuts
+    - [ ] Start-up program with MS-Window
+    - [ ] Run Black-screen after the program started
     - [x] Show/Hide shortcuts label on the screen
-    - [] Change program UI language (English/Spanish)
-    - [] Save user customize settings
-- [] Help file
+    - [ ] Change program UI language (English/Spanish)
+    - [ ] Save user customize settings
+- [ ] Help file
 
 
 # Running and Tested
