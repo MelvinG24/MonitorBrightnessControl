@@ -11,7 +11,7 @@ Begin VB.Form frmSysTray
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   MouseIcon       =   "frmSysTray.frx":030A
+   MouseIcon       =   "frmSysTray.frx":4492
    ScaleHeight     =   45
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   112

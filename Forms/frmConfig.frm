@@ -17,9 +17,9 @@ Begin VB.Form frmConfig
    WhatsThisHelp   =   -1  'True
    Begin VB.ComboBox cmdLanguage 
       Height          =   315
-      ItemData        =   "frmConfig.frx":030A
+      ItemData        =   "frmConfig.frx":4492
       Left            =   960
-      List            =   "frmConfig.frx":0314
+      List            =   "frmConfig.frx":449C
       Style           =   2  'Dropdown List
       TabIndex        =   11
       Top             =   4320
@@ -259,6 +259,13 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+'% Integer
+'& Long
+'! Single
+'# Double
+'$ String
+'@ Currency
+
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 
@@ -281,6 +288,15 @@ Private Sub btnSettings_Click(Index As Integer)
             rBrightness = txtBrightUp.Text
             lBrightness = txtBrightDown.Text
         Case 3:
+            If txtBrightUp.Text <> "" Then
+                txtBrightUp.Enabled = False
+            ElseIf txtBrightDown.Text <> "" Then
+                txtBrightDown.Enabled = False
+            Else
+                MsgBox LoadResString(121)
+                If txtBrightUp.Text = "" Then txtBrightUp.SetFocus
+                If txtBrightDown.Text = "" Then txtBrightDown.SetFocus
+            End If
 default:
         MsgBox "Button do not exists"
     End Select
@@ -332,12 +348,13 @@ Private Sub cmdLanguage_Click()
 End Sub
 
 Private Sub Form_Activate()
-    txtBrightUp.Text = rBrightness
-    txtBrightDown.Text = lBrightness
-    chStartUp.Value = chckRunAtStartUp
-    chOnOff.Value = chckRunAfter
-    cmdLanguage.ListIndex = chckLanguage
+'    txtBrightUp.Text = rBrightness
+'    txtBrightDown.Text = lBrightness
+'    chStartUp.Value = chckRunAtStartUp
+'    chOnOff.Value = chckRunAfter
+'    cmdLanguage.ListIndex = chckLanguage
 '    chLabel.Value = SHOW_SHORTCUTS
+    LoadSettings
     timerOnOff False
 End Sub
 
@@ -350,6 +367,7 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
+    SaveSettings
     timerOnOff True
 End Sub
 
@@ -363,3 +381,5 @@ Private Sub txtBrightUp_LostFocus()
         txtBrightUp.Enabled = False
     End If
 End Sub
+
+

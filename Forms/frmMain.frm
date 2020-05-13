@@ -30,16 +30,6 @@ Begin VB.Form frmMain
       Left            =   1320
       Top             =   0
    End
-   Begin VB.Label position 
-      AutoSize        =   -1  'True
-      Caption         =   "lblPosition"
-      Height          =   195
-      Left            =   1680
-      TabIndex        =   1
-      Top             =   1320
-      Visible         =   0   'False
-      Width           =   705
-   End
    Begin VB.Label lblInfo 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
@@ -129,13 +119,6 @@ Private Sub Form_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub Form_Load()
-    'Set Repeticiones to 0
-    Repeticiones = 0
-    
-    'Set shortcut label
-    lblInfo.Visible = SHOW_SHORTCUTS
-    lblInfo.Caption = LoadResString(101) + " " + rBrightness & vbNewLine & LoadResString(102) + " " + lBrightness
-    
     'Set window color
     Me.BackColor = vbBlack
     
@@ -153,6 +136,14 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Resize()
+    'Set Repeticiones to 0
+    Repeticiones = 0
+    
+    'Set shortcut label
+    lblInfo.Visible = SHOW_SHORTCUTS
+    lblInfo.Caption = LoadResString(101) + " " + rBrightness & vbNewLine & LoadResString(102) + " " + lBrightness
+    
+    'Set label position
     lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120
     lblInfo.Left = (WindowRect.Right * Screen.TwipsPerPixelX - lblInfo.Width) - 1320
 End Sub

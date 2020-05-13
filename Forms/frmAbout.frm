@@ -36,7 +36,7 @@ Begin VB.Form frmAbout
       MultiLine       =   -1  'True
       ScrollBars      =   2  'Vertical
       TabIndex        =   6
-      Text            =   "frmAbout.frx":030A
+      Text            =   "frmAbout.frx":4492
       Top             =   3000
       Width           =   3375
    End
@@ -61,7 +61,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgAppLogo 
       Height          =   1215
       Left            =   2290
-      Picture         =   "frmAbout.frx":077A
+      Picture         =   "frmAbout.frx":4902
       Stretch         =   -1  'True
       Top             =   120
       Width           =   1245
@@ -69,7 +69,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgLicense 
       Height          =   540
       Left            =   202
-      Picture         =   "frmAbout.frx":5569A
+      Picture         =   "frmAbout.frx":59822
       Stretch         =   -1  'True
       Top             =   3000
       Width           =   525
@@ -80,7 +80,7 @@ Begin VB.Form frmAbout
       Caption         =   "Label1"
       Height          =   315
       Left            =   3000
-      MouseIcon       =   "frmAbout.frx":5610E
+      MouseIcon       =   "frmAbout.frx":5A296
       MousePointer    =   99  'Custom
       TabIndex        =   8
       Top             =   2520
@@ -107,7 +107,7 @@ Begin VB.Form frmAbout
    Begin VB.Label lblDescription 
       Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
-      Caption         =   "Descripción de la aplicación"
+      Caption         =   "Descripciï¿½n de la aplicaciï¿½n"
       ForeColor       =   &H00000000&
       Height          =   435
       Left            =   160
@@ -118,7 +118,7 @@ Begin VB.Form frmAbout
    Begin VB.Label lblTitle 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Título de la aplicación"
+      Caption         =   "Tï¿½tulo de la aplicaciï¿½n"
       BeginProperty Font 
          Name            =   "Ubuntu"
          Size            =   11.25
@@ -138,7 +138,7 @@ Begin VB.Form frmAbout
    Begin VB.Label lblVersion 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Versión"
+      Caption         =   "Versiï¿½n"
       Height          =   195
       Left            =   1438
       TabIndex        =   5
@@ -180,7 +180,7 @@ Const KEY_ALL_ACCESS = KEY_QUERY_VALUE + KEY_SET_VALUE + _
 Const HKEY_LOCAL_MACHINE = &H80000002
 Const ERROR_SUCCESS = 0
 Const REG_SZ = 1                         ' Cadena Unicode terminada en valor nulo
-Const REG_DWORD = 4                      ' Número de 32 bits
+Const REG_DWORD = 4                      ' Nï¿½mero de 32 bits
 
 Const gREGKEYSYSINFOLOC = "SOFTWARE\Microsoft\Shared Tools Location"
 Const gREGVALSYSINFOLOC = "MSINFO"
@@ -204,7 +204,7 @@ Private Sub Form_Activate()
     If Me.Visible Then
         ActiveApp = 0
         Me.Caption = "About: " & App.Title
-        lblVersion.Caption = "Versión " & App.Major & "." & App.Minor & "." & App.Revision
+        lblVersion.Caption = "Versiï¿½n " & App.Major & "." & App.Minor & "." & App.Revision
         lblTitle.Caption = App.Title
         lblDescription.Caption = App.Title & App.FileDescription
         lblDeveloper.Caption = "Development by: " & App.CompanyName
@@ -225,9 +225,9 @@ Public Sub StartSysInfo()
     
     ' Intentar obtener ruta de acceso y nombre del programa de Info. del sistema a partir del Registro...
     If GetKeyValue(HKEY_LOCAL_MACHINE, gREGKEYSYSINFO, gREGVALSYSINFO, SysInfoPath) Then
-    ' Intentar obtener sólo ruta del programa de Info. del sistema a partir del Registro...
+    ' Intentar obtener sï¿½lo ruta del programa de Info. del sistema a partir del Registro...
     ElseIf GetKeyValue(HKEY_LOCAL_MACHINE, gREGKEYSYSINFOLOC, gREGVALSYSINFOLOC, SysInfoPath) Then
-        ' Validar la existencia de versión conocida de 32 bits del archivo
+        ' Validar la existencia de versiï¿½n conocida de 32 bits del archivo
         If (Dir(SysInfoPath & "\MSINFO32.EXE") <> "") Then
             SysInfoPath = SysInfoPath & "\MSINFO32.EXE"
             
@@ -244,17 +244,17 @@ Public Sub StartSysInfo()
     
     Exit Sub
 SysInfoErr:
-    MsgBox "La información del sistema no está disponible en este momento", vbOKOnly
+    MsgBox "La informaciï¿½n del sistema no estï¿½ disponible en este momento", vbOKOnly
 End Sub
 
 Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As String, ByRef KeyVal As String) As Boolean
     Dim i As Long                                           ' Contador de bucle
-    Dim rc As Long                                          ' Código de retorno
+    Dim rc As Long                                          ' Cï¿½digo de retorno
     Dim hKey As Long                                        ' Controlador de una clave de Registro abierta
     Dim hDepth As Long                                      '
     Dim KeyValType As Long                                  ' Tipo de datos de una clave de Registro
     Dim tmpVal As String                                    ' Almacenamiento temporal para un valor de clave de Registro
-    Dim KeyValSize As Long                                  ' Tamaño de variable de clave de Registro
+    Dim KeyValSize As Long                                  ' Tamaï¿½o de variable de clave de Registro
     '------------------------------------------------------------
     ' Abrir clave de registro bajo KeyRoot {HKEY_LOCAL_MACHINE...}
     '------------------------------------------------------------
@@ -263,7 +263,7 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     If (rc <> ERROR_SUCCESS) Then GoTo GetKeyError          ' Error de controlador...
     
     tmpVal = String$(1024, 0)                             ' Asignar espacio de variable
-    KeyValSize = 1024                                       ' Marcar tamaño de variable
+    KeyValSize = 1024                                       ' Marcar tamaï¿½o de variable
     
     '------------------------------------------------------------
     ' Obtener valor de clave de Registro...
@@ -276,17 +276,17 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     If (Asc(Mid(tmpVal, KeyValSize, 1)) = 0) Then           ' Win95 agregar cadena terminada en valor nulo...
         tmpVal = Left(tmpVal, KeyValSize - 1)               ' Encontrado valor nulo, se va a quitar de la cadena
     Else                                                    ' En WinNT las cadenas no terminan en valor nulo...
-        tmpVal = Left(tmpVal, KeyValSize)                   ' No se ha encontrado valor nulo, sólo se va a extraer la cadena
+        tmpVal = Left(tmpVal, KeyValSize)                   ' No se ha encontrado valor nulo, sï¿½lo se va a extraer la cadena
     End If
     '------------------------------------------------------------
-    ' Determinar tipo de valor de clave para conversión...
+    ' Determinar tipo de valor de clave para conversiï¿½n...
     '------------------------------------------------------------
     Select Case KeyValType                                  ' Buscar tipos de datos...
     Case REG_SZ                                             ' Tipo de datos String de clave de Registro
         KeyVal = tmpVal                                     ' Copiar valor de cadena
     Case REG_DWORD                                          ' Tipo de datos Double Word de clave del Registro
         For i = Len(tmpVal) To 1 Step -1                    ' Convertir cada bit
-            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, i, 1)))   ' Generar valor carácter a carácter
+            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, i, 1)))   ' Generar valor carï¿½cter a carï¿½cter
         Next
         KeyVal = Format$("&h" + KeyVal)                     ' Convertir Double Word a cadena
     End Select
@@ -295,8 +295,8 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     rc = RegCloseKey(hKey)                                  ' Cerrar clave de Registro
     Exit Function                                           ' Salir
     
-GetKeyError:      ' Borrar después de que se produzca un error...
-    KeyVal = ""                                             ' Establecer valor a cadena vacía
+GetKeyError:      ' Borrar despuï¿½s de que se produzca un error...
+    KeyVal = ""                                             ' Establecer valor a cadena vacï¿½a
     GetKeyValue = False                                     ' Fallo de retorno
     rc = RegCloseKey(hKey)                                  ' Cerrar clave de Registro
 End Function

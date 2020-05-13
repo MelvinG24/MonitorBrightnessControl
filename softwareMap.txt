@@ -1,4 +1,4 @@
-MonitorBrightnessControll
+MonitorBrightnessControll (Software Map when the project is already open in VB6)
   |
   |--Forms
      |--frmSysTray--------(Start-up form, with is the form to show on the Sys.Tray-Bar and the popupmenu)
