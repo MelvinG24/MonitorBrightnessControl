@@ -29,7 +29,6 @@ Begin VB.Form frmSysTray
       End
       Begin VB.Menu mPopupMenu 
          Caption         =   "On/Off"
-         Checked         =   -1  'True
          Index           =   2
       End
       Begin VB.Menu mPopupMenu 
@@ -68,7 +67,10 @@ Private Sub Form_Load()
     Me.Hide
     SysTray.Init Me, "Monitor Brightness Control"
     
-    If Me.mPopupMenu(2).Checked Then frmMain.Show
+    If P_VarChckRunBS = 1 Then
+        Me.mPopupMenu(2).Checked = True
+        frmMain.Show
+    End If
 End Sub
 
 Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -109,12 +111,12 @@ Private Sub unloadMe()
 End Sub
 
 Private Sub chLng()
-    Dim i, m As Integer
+    Dim I, m As Integer
     m = 0
-    For i = 0 To Me.mPopupMenu.UBound
-        If Not Me.mPopupMenu(i).Caption = "-" Then
-            Me.mPopupMenu(i).Caption = LoadResString(103 + m)
+    For I = 0 To Me.mPopupMenu.UBound
+        If Not Me.mPopupMenu(I).Caption = "-" Then
+            Me.mPopupMenu(I).Caption = LoadResString(103 + m)
             m = m + 1
         End If
-    Next i
+    Next I
 End Sub

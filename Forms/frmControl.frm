@@ -122,7 +122,7 @@ Private Sub Form_Activate()
         lblConfig.TooltipText = LoadResString(109)
         
         ActiveApp = 0
-        r = (M_BRIGHTNESS * 10) / 25.5
+        r = (P_VarBrightnessLevel * 10) / 25.5
         sliderControl.Value = r
         Timer1.Enabled = True
         SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
@@ -206,7 +206,7 @@ End Sub
 
 Private Sub sliderControl_Change()
     r = (sliderControl.Value * 25.5) / 10
-    M_BRIGHTNESS = r
+    P_VarBrightnessLevel = r
 End Sub
 
 Private Sub sliderControl_Scroll()

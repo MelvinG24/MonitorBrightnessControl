@@ -77,7 +77,7 @@ Public Function StartUp(ByVal appName As String) As Boolean
     End If
 End Function
 
-Public Sub SetRunAtStartUp(ByVal appName As String, ByVal appPath As String, Optional ByVal runAtStartUp As Boolean = True)
+Public Sub SetRunAtStartUp(ByVal appName As String, ByVal appPath As String, Optional ByVal runAtStartUp As Boolean)
     Dim hKey As Long
     Dim keyValue As String
     Dim Status As Long

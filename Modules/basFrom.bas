@@ -26,29 +26,34 @@ Public Declare Function SystemParametersInfo Lib "user32" Alias "SystemParameter
                 ByVal uParam As Long, _
                 ByRef lpvParam As Any, _
                 ByVal fuWinIni As Long) As Long
-'
+
 'Public Declare Function GetKeyState Lib "user32" ( _
 '                ByVal nVirtKey As Long) As Integer
 
 Public Const SPI_GETWORKAREA = 48
-Public Const rB_SC As String = "Ctrl + Shift + F5"
-Public Const lB_SC As String = "Ctrl + Shift + F6"
-'Brightness variable
-Public M_BRIGHTNESS As Integer
-Public SHOW_SHORTCUTS As Boolean
-Public rBrightness As String
-Public lBrightness As String
-'Check run-program variable
-Public chckRunAtStartUp As Integer
-Public chckRunAfter As Integer
-'Language variable
-Public chckLanguage As Integer
+Public Const lB_SC As String = "Ctrl + Shift + -"   'Default lower brightness short-cut
+Public Const rB_SC As String = "Ctrl + Shift + +"   'Default raise brightness short-cut
+'----------------------------------------------------------
+' Configuration Variables
+'----------------------------------------------------------
+Public P_VarBrightnessLevel As Integer              'Brightness level control
+Public P_VarChckLanguage As Integer                 'Check program language
+Public P_VarChckRunStartUp As Integer               'Check program if run with MS-Windows start-up
+Public P_VarChckRunBS As Integer                    'Check black-screen if run after program started
+Public P_VarChckSCEnable As Integer                 'Check if short-cut are enable to use or not
+Public P_VarChckSCVisible As Integer                'Check if short-cut are visible on black-screen
+Public P_VarLwBrightness As String                  'Lower brightness short-cut
+Public P_VarRsBrightness As String                  'Raise brightness short-cut
+Public L As Integer                                 'Language selected if 0(zero) English, if # Spanish
 
 '----------------------------------------------------------
 ' Start-up program
 '----------------------------------------------------------
 Private Sub Main()
     If App.PrevInstance Then Exit Sub
+    
+    'Default brightness level after run program
+    P_VarBrightnessLevel = 128
     
     'Check if settings files exist
     If fileExistsCheck("Settings.dat") Then
@@ -57,21 +62,7 @@ Private Sub Main()
         createSettings
     End If
     
-'    rBrightness = rB_SC
-'    lBrightness = lB_SC
-'    M_BRIGHTNESS = 128
-'    SHOW_SHORTCUTS = True
-'    chckLanguage = 0
-    
-    m_IgnoreEvents = True
-    If StartUp(App.EXEName) Then
-        chckRunAtStartUp = 1
-    Else
-        chckRunAtStartUp = 0
-        chckRunAfter = 0
-    End If
-    m_IgnoreEvents = False
-    
+    '*******************************
     '¿Estara de Más aquí?
     'Get monitor work area size -without taskbar or desktop toolbars obstruction
     SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
@@ -84,6 +75,17 @@ End Sub
 '----------------------------------------------------------
 Public Sub HuperJump(ByVal URL As String)
     Call ShellExecute(0&, vbNullString, URL, vbNullString, vbNullString, vbNormalFocus)
+End Sub
+
+'----------------------------------------------------------
+' Check/Change language
+'----------------------------------------------------------
+Public Sub F_L(I As Integer)
+    If I = 1 Then
+        L = 1255
+    Else
+        L = 0
+    End If
 End Sub
 
 '----------------------------------------------------------
@@ -148,76 +150,107 @@ End Sub
 Private Sub createSettings()
     Dim f As Integer
     
+    P_VarChckLanguage = 0
+    chckStartUp 'Function call
+    P_VarChckRunBS = 1
+    P_VarChckSCEnable = 1
+    P_VarChckSCVisible = 1
+    P_VarLwBrightness = lB_SC
+    P_VarRsBrightness = rB_SC
+    L = 0
+    
     On Error Resume Next: Kill "Settings.dat": On Error GoTo 0
     f = FreeFile(0)
     Open "Settings.dat" For Output As #f
-        Write #f, "enableShortCuts", 1
-        Write #f, "shortCutUp", rB_SC
-        Write #f, "shortCutDown", lB_SC
-        Write #f, "start-UP", 0
-        Write #f, "runBlckScrn", 0
-        Write #f, "shortCutLabel", 1
-        Write #f, "languageSelect", 0
+        Write #f, "varChckLanguage", P_VarChckLanguage
+'        Write #f, "varChckRunStartUp", P_VarChckRunStartUp
+        Write #f, "varChckRunBS", P_VarChckRunBS
+        Write #f, "varChckSCEnable", P_VarChckSCEnable
+        Write #f, "varChckSCVisible", P_VarChckSCVisible
+        Write #f, "varLwBrightness", P_VarLwBrightness
+        Write #f, "varRsBrightness", P_VarRsBrightness
     Close #f
-    
-    rBrightness = rB_SC
-    lBrightness = lB_SC
-    M_BRIGHTNESS = 128
-    SHOW_SHORTCUTS = True
-    chckLanguage = 0
 End Sub
 
 Public Sub LoadSettings()
     Dim f, Val As Integer
     Dim SettingName, Txt As String
     
+    chckStartUp 'Function call
+    
     f = FreeFile(0)
     Open "Settings.dat" For Input As #f
     Do Until EOF(f)
         Input #f, SettingName
         Select Case SettingName
-            Case "enableShortCuts":
+            Case "varChckLanguage":
                 Input #f, Val
-                frmConfig.chEnableSC.Value = Val
-            Case "shortCutUp":
+                P_VarChckLanguage = Val
+'            Case "varChckRunStartUp":
+'                Input #f, Val
+'                P_VarChckRunStartUp = Val
+            Case "varChckRunBS":
+                Input #f, Val
+                P_VarChckRunBS = Val
+            Case "varChckSCEnable":
+                Input #f, Val
+                P_VarChckSCEnable = Val
+            Case "varChckSCVisible":
+                Input #f, Val
+                P_VarChckSCVisible = Val
+            Case "varLwBrightness":
                 Input #f, Txt
-                frmConfig.txtBrightUp.Text = Txt
-            Case "shortCutDown":
+                P_VarLwBrightness = Txt
+            Case "varRsBrightness":
                 Input #f, Txt
-                frmConfig.txtBrightDown.Text = Txt
-            Case "start-UP":
-                Input #f, Val
-                frmConfig.chStartUp.Value = Val
-            Case "runBlckScrn":
-                Input #f, Val
-                frmConfig.chOnOff.Value = Val
-            Case "shortCutLabel":
-                Input #f, Val
-                frmConfig.chLabel.Value = Val
-            Case "languageSelect":
-                Input #f, Val
-                frmConfig.cmdLanguage.ListIndex = Val
+                P_VarRsBrightness = Txt
         End Select
     Loop
     Close #f
+    
+    F_L P_VarChckLanguage
 End Sub
 
 Public Sub SaveSettings()
     Dim f As Integer
     
+    With frmConfig
+        P_VarChckLanguage = .cmdLanguage.ListIndex
+        chckStartUp 'Function call
+        P_VarChckRunBS = .ChckRunBS.Value
+        P_VarChckSCEnable = .ChckSCEnable.Value
+        P_VarChckSCVisible = .ChckSCVisible.Value
+        P_VarLwBrightness = .txtBrightDown.Text
+        P_VarRsBrightness = .txtBrightUp.Text
+    End With
+    
     On Error Resume Next: Kill "Settings.dat": On Error GoTo 0
     f = FreeFile(0)
     Open "Settings.dat" For Output As #f
-        Write #f, "enableShortCuts", frmConfig.chEnableSC.Value
-        Write #f, "shortCutUp", frmConfig.txtBrightUp.Text
-        Write #f, "shortCutDown", frmConfig.txtBrightDown.Text
-        Write #f, "start-UP", frmConfig.chStartUp.Value
-        Write #f, "runBlckScrn", frmConfig.chOnOff.Value
-        Write #f, "shortCutLabel", frmConfig.chLabel.Value
-        Write #f, "languageSelect", frmConfig.cmdLanguage.ListIndex
+        Write #f, "varChckLanguage", P_VarChckLanguage
+'            Write #f, "varChckRunStartUp", .ChckRunStartUp.Value
+        Write #f, "varChckRunBS", P_VarChckRunBS
+        Write #f, "varChckSCEnable", P_VarChckSCEnable
+        Write #f, "varChckSCVisible", P_VarChckSCVisible
+        Write #f, "varLwBrightness", P_VarLwBrightness
+        Write #f, "varRsBrightness", P_VarRsBrightness
     Close #f
 End Sub
 
 Private Function fileExistsCheck(f As String) As Boolean
     fileExistsCheck = (PathFileExists(f) <> 0)
+End Function
+
+'----------------------------------------------------------
+' Check if program start-up with MS-Windows
+'----------------------------------------------------------
+Private Function chckStartUp()
+    m_IgnoreEvents = True
+    If StartUp(App.EXEName) Then
+        P_VarChckRunStartUp = 1
+    Else
+        P_VarChckRunStartUp = 0
+'        P_VarChckRunBS = 0
+    End If
+    m_IgnoreEvents = False
 End Function

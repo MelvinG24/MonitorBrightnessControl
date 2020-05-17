@@ -262,7 +262,7 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     
     If (rc <> ERROR_SUCCESS) Then GoTo GetKeyError          ' Error de controlador...
     
-    tmpVal = String$(1024, 0)                             ' Asignar espacio de variable
+    tmpVal = String$(1024, 0)                               ' Asignar espacio de variable
     KeyValSize = 1024                                       ' Marcar tama�o de variable
     
     '------------------------------------------------------------

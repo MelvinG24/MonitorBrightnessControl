@@ -25,7 +25,7 @@ Begin VB.Form frmConfig
       Top             =   4320
       Width           =   1695
    End
-   Begin VB.CheckBox chEnableSC 
+   Begin VB.CheckBox ChckSCEnable 
       Caption         =   "Enable"
       Height          =   495
       Left            =   4440
@@ -34,7 +34,7 @@ Begin VB.Form frmConfig
       Value           =   1  'Checked
       Width           =   855
    End
-   Begin VB.CheckBox chLabel 
+   Begin VB.CheckBox ChckSCVisible 
       Caption         =   "On/Off on-screen shortcuts label"
       Height          =   255
       Left            =   360
@@ -58,7 +58,7 @@ Begin VB.Form frmConfig
       TabIndex        =   15
       Top             =   2640
       Width           =   5295
-      Begin VB.CheckBox chOnOff 
+      Begin VB.CheckBox ChckRunBS 
          Caption         =   "When program started run Black-Screen on mode = ON"
          Enabled         =   0   'False
          Height          =   255
@@ -67,7 +67,7 @@ Begin VB.Form frmConfig
          Top             =   600
          Width           =   4335
       End
-      Begin VB.CheckBox chStartUp 
+      Begin VB.CheckBox ChckRunStartUp 
          Caption         =   "Start-Up program with MS Windows"
          Height          =   195
          Left            =   240
@@ -110,7 +110,7 @@ Begin VB.Form frmConfig
          Width           =   765
       End
       Begin VB.CommandButton btnSettings 
-         Caption         =   "Save"
+         Caption         =   "Set"
          Height          =   375
          Index           =   3
          Left            =   3960
@@ -275,30 +275,31 @@ Private Sub btnSettings_Click(Index As Integer)
             txtBrightUp.Enabled = True
             txtBrightUp.Text = ""
             txtBrightUp.SetFocus
+            Exit Sub
         Case 1:
             txtBrightDown.Enabled = True
             txtBrightDown.Text = ""
             txtBrightDown.SetFocus
+            Exit Sub
         Case 2:
             txtBrightUp.Text = rB_SC
             txtBrightUp.Enabled = False
             txtBrightDown.Text = lB_SC
             txtBrightDown.Enabled = False
             
-            rBrightness = txtBrightUp.Text
-            lBrightness = txtBrightDown.Text
+            P_VarRsBrightness = rB_SC
+            P_VarLwBrightness = lB_SC
+            Exit Sub
         Case 3:
             If txtBrightUp.Text <> "" Then
                 txtBrightUp.Enabled = False
             ElseIf txtBrightDown.Text <> "" Then
                 txtBrightDown.Enabled = False
             Else
-                MsgBox LoadResString(121)
+                MsgBox LoadResString(121 + L)
                 If txtBrightUp.Text = "" Then txtBrightUp.SetFocus
                 If txtBrightDown.Text = "" Then txtBrightDown.SetFocus
             End If
-default:
-        MsgBox "Button do not exists"
     End Select
 End Sub
 
@@ -308,10 +309,10 @@ Private Sub btnDone_Click()
     Unload Me
 End Sub
 
-Private Sub chEnableSC_Click()
+Private Sub ChckSCEnable_Click()
     Dim Check, Index As Integer
     
-    Check = chEnableSC.Value
+    Check = ChckSCEnable.Value
     
     Frame1.Enabled = Check
     Shape1.Visible = CBool(Check = 0)
@@ -320,42 +321,46 @@ Private Sub chEnableSC_Click()
     Next
 End Sub
 
-Private Sub chLabel_Click()
+Private Sub ChckSCVisible_Click()
     Dim Check As Integer
     
-    Check = chLabel.Value
+    Check = ChckSCVisible.Value
     
     frmMain.lblInfo.Visible = Check
-    SHOW_SHORTCUTS = Check
 End Sub
 
-Private Sub chStartUp_Click()
+Private Sub ChckRunStartUp_Click()
     Dim Check As Integer
     
-    Check = chStartUp.Value
+    Check = ChckRunStartUp.Value
     
-    chStartUp.FontBold = Check
-    chOnOff.Enabled = Check
+    ChckRunStartUp.FontBold = Check
+    ChckRunBS.Enabled = Check
     
-    If chStartUp.Value = 0 Then chOnOff.Value = 0
+'    If ChckRunStartUp.Value = 0 Then ChckRunBS.Value = 0
     
     If m_IgnoreEvents Then Exit Sub
-    SetRunAtStartUp App.EXEName, App.Path
+    SetRunAtStartUp App.EXEName, App.Path, Check
 End Sub
 
 Private Sub cmdLanguage_Click()
-    chckLanguage = cmdLanguage.ListIndex
+'    P_VarChckLanguage = cmdLanguage.ListIndex
+    F_L cmdLanguage.ListIndex
+    F_LoadLanguage
 End Sub
 
 Private Sub Form_Activate()
-'    txtBrightUp.Text = rBrightness
-'    txtBrightDown.Text = lBrightness
-'    chStartUp.Value = chckRunAtStartUp
-'    chOnOff.Value = chckRunAfter
-'    cmdLanguage.ListIndex = chckLanguage
-'    chLabel.Value = SHOW_SHORTCUTS
-    LoadSettings
-    timerOnOff False
+    If Me.Visible Then
+        cmdLanguage.ListIndex = P_VarChckLanguage
+        ChckRunStartUp.Value = P_VarChckRunStartUp
+        ChckRunBS.Value = P_VarChckRunBS
+        ChckSCEnable.Value = P_VarChckSCEnable
+        ChckSCVisible.Value = P_VarChckSCVisible
+        txtBrightDown.Text = P_VarLwBrightness
+        txtBrightUp.Text = P_VarRsBrightness
+        F_LoadLanguage
+        timerOnOff False
+    End If
 End Sub
 
 Private Sub Form_KeyPress(KeyAscii As Integer)
@@ -367,19 +372,19 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    SaveSettings
-    timerOnOff True
-End Sub
-
-Private Sub txtBrightUp_KeyDown(KeyCode As Integer, Shift As Integer)
-'    txtBrightUp.Text
+    If Me.Visible Then
+        SaveSettings
+        timerOnOff True
+    End If
 End Sub
 
 Private Sub txtBrightUp_LostFocus()
     If txtBrightUp.Text = "" Then
-        txtBrightUp.Text = rBrightness
+        txtBrightUp.Text = P_VarRsBrightness
         txtBrightUp.Enabled = False
     End If
 End Sub
 
-
+Private Sub F_LoadLanguage()
+'    LoadResString (121 + L)
+End Sub

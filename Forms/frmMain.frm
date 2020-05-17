@@ -110,7 +110,7 @@ Private Sub Form_KeyPress(KeyAscii As Integer)
         Repeticiones = Repeticiones + 1
         If Timer3.Enabled = False Then Timer3.Enabled = True
         If Repeticiones >= 3 Then
-            M_BRIGHTNESS = 128
+            P_VarBrightnessLevel = 128
             OnOffSwitch 2
         End If
     Else
@@ -129,7 +129,7 @@ Private Sub Form_Load()
     SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
     
     'Set window transparency percentage
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, M_BRIGHTNESS, LWA_ALPHA
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, P_VarBrightnessLevel, LWA_ALPHA
     
     'Set main windows position to the top
     SetWinToTOP
@@ -140,8 +140,8 @@ Private Sub Form_Resize()
     Repeticiones = 0
     
     'Set shortcut label
-    lblInfo.Visible = SHOW_SHORTCUTS
-    lblInfo.Caption = LoadResString(101) + " " + rBrightness & vbNewLine & LoadResString(102) + " " + lBrightness
+    lblInfo.Visible = P_VarChckSCEnable
+    lblInfo.Caption = LoadResString(101) + " " + P_VarRsBrightness & vbNewLine & LoadResString(102) + " " + P_VarLwBrightness
     
     'Set label position
     lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120
@@ -155,7 +155,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub Timer1_Timer()
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, M_BRIGHTNESS, LWA_ALPHA
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, P_VarBrightnessLevel, LWA_ALPHA
 End Sub
 
 Private Sub Timer2_Timer()
