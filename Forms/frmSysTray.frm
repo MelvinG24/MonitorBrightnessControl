@@ -59,6 +59,40 @@ Option Explicit
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 
+'----------------------------------------------------------
+' General Functions
+'----------------------------------------------------------
+'Mouse left-click on project icon
+Private Sub SysTray_LeftClick()
+    showControl
+End Sub
+
+'Mouse right-click on project icon
+Private Sub SysTray_RightClick()
+    If frmAbout.Visible Then Unload frmAbout
+    If frmControl.Visible Then Unload frmControl
+    If frmConfig.Visible Then
+        frmConfig.SetFocus
+    Else
+        PopupMenu Me.mPopupMenuMain
+    End If
+End Sub
+
+'Change project language
+Private Sub chLng()
+    Dim I, m As Integer
+    m = 0
+    For I = 0 To Me.mPopupMenu.UBound
+        If Not Me.mPopupMenu(I).Caption = "-" Then
+            Me.mPopupMenu(I).Caption = LoadResString(103 + m)
+            m = m + 1
+        End If
+    Next I
+End Sub
+
+'----------------------------------------------------------
+' Form/Controls Actions
+'----------------------------------------------------------
 Private Sub Form_Load()
     chLng
     Set SysTray = New clsSysTray
@@ -83,40 +117,15 @@ Private Sub mPopupMenu_Click(Index As Integer)
         Case 2: OnOffSwitch Index
         Case 3: showControl
         Case 4: showConfig
-        Case 6: unloadMe
+        Case 6: Unload Me
         Case Else: MsgBox Me.mPopupMenu(Index).Caption
     End Select
 End Sub
 
-Private Sub SysTray_LeftClick()
-    showControl
-End Sub
-
-Private Sub SysTray_RightClick()
-    If frmAbout.Visible Then Unload frmAbout
-    If frmControl.Visible Then Unload frmControl
-    If frmConfig.Visible Then
-        frmConfig.SetFocus
-    Else
-        PopupMenu Me.mPopupMenuMain
-    End If
-End Sub
-
-Private Sub unloadMe()
+Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
     Dim frm As Form
     For Each frm In Forms
         Unload frm
         Set frm = Nothing
     Next frm
-End Sub
-
-Private Sub chLng()
-    Dim I, m As Integer
-    m = 0
-    For I = 0 To Me.mPopupMenu.UBound
-        If Not Me.mPopupMenu(I).Caption = "-" Then
-            Me.mPopupMenu(I).Caption = LoadResString(103 + m)
-            m = m + 1
-        End If
-    Next I
 End Sub

@@ -61,7 +61,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgAppLogo 
       Height          =   1215
       Left            =   2290
-      Picture         =   "frmAbout.frx":4902
+      Picture         =   "frmAbout.frx":4901
       Stretch         =   -1  'True
       Top             =   120
       Width           =   1245
@@ -69,7 +69,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgLicense 
       Height          =   540
       Left            =   202
-      Picture         =   "frmAbout.frx":59822
+      Picture         =   "frmAbout.frx":59821
       Stretch         =   -1  'True
       Top             =   3000
       Width           =   525
@@ -80,7 +80,7 @@ Begin VB.Form frmAbout
       Caption         =   "Label1"
       Height          =   315
       Left            =   3000
-      MouseIcon       =   "frmAbout.frx":5A296
+      MouseIcon       =   "frmAbout.frx":5A295
       MousePointer    =   99  'Custom
       TabIndex        =   8
       Top             =   2520
@@ -138,9 +138,9 @@ Begin VB.Form frmAbout
    Begin VB.Label lblVersion 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Versi�n"
+      Caption         =   "Version"
       Height          =   195
-      Left            =   1438
+      Left            =   1440
       TabIndex        =   5
       Top             =   1560
       Width           =   525
@@ -204,7 +204,7 @@ Private Sub Form_Activate()
     If Me.Visible Then
         ActiveApp = 0
         Me.Caption = "About: " & App.Title
-        lblVersion.Caption = "Versi�n " & App.Major & "." & App.Minor & "." & App.Revision
+        lblVersion.Caption = "Version " & App.Major & "." & App.Minor & "." & App.Revision
         lblTitle.Caption = App.Title
         lblDescription.Caption = App.Title & App.FileDescription
         lblDeveloper.Caption = "Development by: " & App.CompanyName
@@ -248,7 +248,7 @@ SysInfoErr:
 End Sub
 
 Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As String, ByRef KeyVal As String) As Boolean
-    Dim i As Long                                           ' Contador de bucle
+    Dim I As Long                                           ' Contador de bucle
     Dim rc As Long                                          ' C�digo de retorno
     Dim hKey As Long                                        ' Controlador de una clave de Registro abierta
     Dim hDepth As Long                                      '
@@ -285,8 +285,8 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     Case REG_SZ                                             ' Tipo de datos String de clave de Registro
         KeyVal = tmpVal                                     ' Copiar valor de cadena
     Case REG_DWORD                                          ' Tipo de datos Double Word de clave del Registro
-        For i = Len(tmpVal) To 1 Step -1                    ' Convertir cada bit
-            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, i, 1)))   ' Generar valor car�cter a car�cter
+        For I = Len(tmpVal) To 1 Step -1                    ' Convertir cada bit
+            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, I, 1)))   ' Generar valor car�cter a car�cter
         Next
         KeyVal = Format$("&h" + KeyVal)                     ' Convertir Double Word a cadena
     End Select
@@ -306,9 +306,11 @@ Private Sub Form_LostFocus()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    Timer1.Enabled = False
-    Timer2.Enabled = False
-    timerOnOff True
+    If Me.Visible Then
+        Timer1.Enabled = False
+        Timer2.Enabled = False
+        timerOnOff True
+    End If
 End Sub
 
 Private Sub lblWWW_DragDrop(Source As Control, X As Single, Y As Single)

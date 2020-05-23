@@ -36,11 +36,11 @@ Begin VB.Form frmControl
       Orientation     =   1
       LargeChange     =   10
       SmallChange     =   10
-      Max             =   100
-      SelStart        =   50
+      Max             =   90
+      SelStart        =   45
       TickStyle       =   2
-      TickFrequency   =   50
-      Value           =   50
+      TickFrequency   =   45
+      Value           =   45
    End
    Begin VB.PictureBox Picture1 
       Align           =   2  'Align Bottom
@@ -81,8 +81,9 @@ Begin VB.Form frmControl
          Width           =   630
       End
    End
-   Begin VB.Image imgDay 
+   Begin VB.Image btnDayNight 
       Height          =   500
+      Index           =   0
       Left            =   240
       MouseIcon       =   "frmControl.frx":030A
       MousePointer    =   99  'Custom
@@ -91,9 +92,10 @@ Begin VB.Form frmControl
       Top             =   120
       Width           =   500
    End
-   Begin VB.Image imgNight 
+   Begin VB.Image btnDayNight 
       Appearance      =   0  'Flat
       Height          =   495
+      Index           =   1
       Left            =   240
       MouseIcon       =   "frmControl.frx":52E01
       MousePointer    =   99  'Custom
@@ -112,9 +114,43 @@ Option Explicit
 
 Dim sys As StatusBar
 Dim ActiveApp As Long
-Dim r As Integer
 
 Private Declare Function GetActiveWindow Lib "user32" () As Long
+
+Private Sub btnDayNight_Click(Index As Integer)
+    Select Case btnDayNight(Index).Index
+        Case 0: 'btnDay
+            If sliderControl.Value >= 69 And sliderControl.Value <= 90 Then
+                sliderControl.Value = 68
+            ElseIf sliderControl.Value >= 47 And sliderControl.Value <= 68 Then
+                sliderControl.Value = 46
+            ElseIf sliderControl.Value >= 25 And sliderControl.Value <= 46 Then
+                sliderControl.Value = 24
+            ElseIf sliderControl.Value <= 24 Then
+                sliderControl.Value = 0
+            End If
+        Case 1: 'btnNight
+            If sliderControl.Value >= 0 And sliderControl.Value <= 23 Then
+                sliderControl.Value = 24
+            ElseIf sliderControl.Value >= 24 And sliderControl.Value <= 45 Then
+                sliderControl.Value = 46
+            ElseIf sliderControl.Value >= 46 And sliderControl.Value <= 67 Then
+                sliderControl.Value = 68
+            ElseIf sliderControl.Value >= 68 Then
+                sliderControl.Value = 90
+            End If
+    End Select
+End Sub
+
+Private Sub btnDayNight_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    btnDayNight(Index).Appearance = 1
+    btnDayNight(Index).BorderStyle = 1
+End Sub
+
+Private Sub btnDayNight_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    btnDayNight(Index).Appearance = 0
+    btnDayNight(Index).BorderStyle = 0
+End Sub
 
 Private Sub Form_Activate()
     If Me.Visible Then
@@ -122,11 +158,12 @@ Private Sub Form_Activate()
         lblConfig.TooltipText = LoadResString(109)
         
         ActiveApp = 0
-        r = (P_VarBrightnessLevel * 10) / 25.5
-        sliderControl.Value = r
+        sliderControl.Value = (P_VarBrightnessLevel * 10) / 28.5 'The divisor was changed from its original value of 25.5 to 28.5 because slider now does not go all the way to 100 instead of to 90
         Timer1.Enabled = True
         SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
-        frmMain.Timer1.Enabled = True
+        
+        'Set focus on slider control
+        sliderControl.SetFocus
     End If
 End Sub
 
@@ -151,52 +188,9 @@ Private Sub Form_Resize()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    Timer1.Enabled = False
-    frmMain.Timer1.Enabled = False
-End Sub
-
-Private Sub imgDay_Click()
-    If sliderControl.Value >= 76 And sliderControl.Value <= 100 Then
-        sliderControl.Value = 75
-    ElseIf sliderControl.Value >= 51 And sliderControl.Value <= 75 Then
-        sliderControl.Value = 50
-    ElseIf sliderControl.Value >= 26 And sliderControl.Value <= 50 Then
-        sliderControl.Value = 25
-    ElseIf sliderControl.Value <= 25 Then
-        sliderControl.Value = 0
+    If Me.Visible Then
+        Timer1.Enabled = False
     End If
-End Sub
-
-Private Sub imgDay_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    imgDay.Appearance = 1
-    imgDay.BorderStyle = 1
-End Sub
-
-Private Sub imgDay_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    imgDay.Appearance = 0
-    imgDay.BorderStyle = 0
-End Sub
-
-Private Sub imgNight_Click()
-    If sliderControl.Value >= 0 And sliderControl.Value <= 24 Then
-        sliderControl.Value = 25
-    ElseIf sliderControl.Value >= 25 And sliderControl.Value <= 49 Then
-        sliderControl.Value = 50
-    ElseIf sliderControl.Value >= 50 And sliderControl.Value <= 74 Then
-        sliderControl.Value = 75
-    ElseIf sliderControl.Value >= 75 Then
-        sliderControl.Value = 100
-    End If
-End Sub
-
-Private Sub imgNight_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    imgNight.Appearance = 1
-    imgNight.BorderStyle = 1
-End Sub
-
-Private Sub imgNight_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    imgNight.Appearance = 0
-    imgNight.BorderStyle = 0
 End Sub
 
 Private Sub lblConfig_Click()
@@ -205,8 +199,8 @@ Private Sub lblConfig_Click()
 End Sub
 
 Private Sub sliderControl_Change()
-    r = (sliderControl.Value * 25.5) / 10
-    P_VarBrightnessLevel = r
+    P_VarBrightnessLevel = (sliderControl.Value * 25.5) / 10
+    frmMain.SetWinTrans P_VarBrightnessLevel
 End Sub
 
 Private Sub sliderControl_Scroll()

@@ -6,10 +6,10 @@ A VB6 project created to help you control your monitor brightness on MS-Windows 
 
 ---
 ## Why Another Brightness Control Software?
-They are a variety of programs in MS-Windows which already allow the user to manipulate their monitor brightness without touching the monitor itself. However, changing the brightness in most cases is not enough, that's why these types of software come with contrast adjustment as well. The problem with it, instead of just change the brightness user has also taken care of the contrast, making the process of adjustment unnecessarily complex. Additionally, in most cases, these software neither provides any restore option, making the user manual restore it changes in case if they want to go back.<br/>
+They are a variety of programs in MS-Windows which already allow the user to manipulate their monitor brightness without touching the monitor itself. However, changing the brightness in most cases is not enough, that's why those types of software come with contrast adjustment as well. The problem with it, instead of just change the brightness user has also taken care of the contrast, making the process of adjustment unnecessarily complex. Additionally, in most cases those software neither provide any restore option, making the user manually restore it changes in case if they want to go back.<br/>
 
 ## What does this program do?
-This program instead of adjusting directly your monitor brightness and damage your contrast it created a black-screen layer on top of your monitor which allows the user to adjust its transparency; thus, the user won't need to adjust the brightness neither the contrast of it monitor. And if the software is closed, the user won't need to readjust their preview settings on the brightness. Making this software easier to use and user-friendly.
+This program instead of adjusting directly your monitor brightness and damage your contrast it created a black-screen layer on top of your monitor which allows the user to adjust its transparency, as a result, the user won't need to adjust the brightness neither the contrast on their monitor and if the software is closed, the user won't need to readjust their preview settings on their monitor's brightness; Thus, all these features make this software easier to use and user-friendly.
 
 # To-Do List:
 - [x] Black-screen layer

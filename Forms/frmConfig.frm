@@ -75,14 +75,15 @@ Begin VB.Form frmConfig
          Top             =   240
          Width           =   4815
       End
-      Begin VB.Line Line4 
+      Begin VB.Line Line1 
          BorderStyle     =   3  'Dot
+         Index           =   1
          X1              =   600
          X2              =   360
          Y1              =   720
          Y2              =   720
       End
-      Begin VB.Line Line3 
+      Begin VB.Line Line1 
          BorderStyle     =   3  'Dot
          Index           =   0
          X1              =   360
@@ -183,8 +184,9 @@ Begin VB.Form frmConfig
          Visible         =   0   'False
          Width           =   5295
       End
-      Begin VB.Line Line2 
-         BorderColor     =   &H8000000A&
+      Begin VB.Line Line 
+         BorderColor     =   &H00808080&
+         Index           =   1
          X1              =   240
          X2              =   5040
          Y1              =   1680
@@ -208,8 +210,9 @@ Begin VB.Form frmConfig
          Top             =   1120
          Width           =   1080
       End
-      Begin VB.Line Line1 
-         BorderColor     =   &H8000000A&
+      Begin VB.Line Line 
+         BorderColor     =   &H00808080&
+         Index           =   0
          X1              =   240
          X2              =   5040
          Y1              =   960
@@ -243,9 +246,9 @@ Begin VB.Form frmConfig
       Top             =   4350
       Width           =   780
    End
-   Begin VB.Line Line3 
-      BorderColor     =   &H8000000A&
-      Index           =   1
+   Begin VB.Line Line 
+      BorderColor     =   &H00808080&
+      Index           =   2
       X1              =   120
       X2              =   5280
       Y1              =   4080

@@ -20,14 +20,9 @@ Begin VB.Form frmMain
       Top             =   0
    End
    Begin VB.Timer Timer2 
-      Interval        =   100
-      Left            =   1800
-      Top             =   0
-   End
-   Begin VB.Timer Timer1 
       Enabled         =   0   'False
       Interval        =   100
-      Left            =   1320
+      Left            =   1800
       Top             =   0
    End
    Begin VB.Label lblInfo 
@@ -101,8 +96,43 @@ Private Const TOPMOST_FLAGS = SWP_NOMOVE Or SWP_NOSIZE
 Private Const WS_EX_LAYERED = &H80000
 Private Const WS_EX_TRANSPARENT = &H20&
 
+'----------------------------------------------------------
+' General Functions
+'----------------------------------------------------------
 Private Sub SetWinToTOP()
     SetWindowPos Me.hwnd, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS
+End Sub
+
+Public Sub SetWinTrans(BLevel As Integer)
+    SetLayeredWindowAttributes Me.hwnd, vbBlack, BLevel, LWA_ALPHA
+End Sub
+
+'----------------------------------------------------------
+' Form/Controls Actions
+'----------------------------------------------------------
+Private Sub Form_Activate()
+    'Set window color
+    Me.BackColor = vbBlack
+    
+    'Set window transparency
+    SetWindowLong Me.hwnd, GWL_EXSTYLE, WS_EX_LAYERED
+    
+    'Set window click-through enable
+    SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
+    
+    'Set window transparency percentage
+    SetWinTrans P_VarBrightnessLevel
+    
+    'Set main windows position to the top
+    SetWinToTOP
+    
+'    While Me.Visible = True
+'        activeWin = GetTopWindow(Me.hwnd)
+'        If activeWin <> Me.hwnd Then SetWinToTOP
+'    Wend
+        
+    'Activate Timer2
+    Timer2.Enabled = True
 End Sub
 
 Private Sub Form_KeyPress(KeyAscii As Integer)
@@ -116,23 +146,6 @@ Private Sub Form_KeyPress(KeyAscii As Integer)
     Else
         Repeticiones = 0
     End If
-End Sub
-
-Private Sub Form_Load()
-    'Set window color
-    Me.BackColor = vbBlack
-    
-    'Set window transparency
-    SetWindowLong Me.hwnd, GWL_EXSTYLE, WS_EX_LAYERED
-    
-    'Set window click-through enable
-    SetWindowLong Me.hwnd, GWL_EXSTYLE, GetWindowLong(Me.hwnd, GWL_EXSTYLE) Or WS_EX_TRANSPARENT
-    
-    'Set window transparency percentage
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, P_VarBrightnessLevel, LWA_ALPHA
-    
-    'Set main windows position to the top
-    SetWinToTOP
 End Sub
 
 Private Sub Form_Resize()
@@ -149,13 +162,8 @@ Private Sub Form_Resize()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    Timer1.Enabled = False
     Timer2.Enabled = False
     Timer3.Enabled = False
-End Sub
-
-Private Sub Timer1_Timer()
-    SetLayeredWindowAttributes Me.hwnd, vbBlack, P_VarBrightnessLevel, LWA_ALPHA
 End Sub
 
 Private Sub Timer2_Timer()
