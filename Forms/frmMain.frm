@@ -107,6 +107,10 @@ Public Sub SetWinTrans(BLevel As Integer)
     SetLayeredWindowAttributes Me.hwnd, vbBlack, BLevel, LWA_ALPHA
 End Sub
 
+Public Sub chgMainLblLng()
+    lblInfo.Caption = LoadResString(101 + L) + " " + P_VarRsBrightness & vbNewLine & LoadResString(102 + L) + " " + P_VarLwBrightness
+End Sub
+
 '----------------------------------------------------------
 ' Form/Controls Actions
 '----------------------------------------------------------
@@ -154,7 +158,7 @@ Private Sub Form_Resize()
     
     'Set shortcut label
     lblInfo.Visible = P_VarChckSCEnable
-    lblInfo.Caption = LoadResString(101) + " " + P_VarRsBrightness & vbNewLine & LoadResString(102) + " " + P_VarLwBrightness
+    chgMainLblLng 'Check and change labels language
     
     'Set label position
     lblInfo.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - lblInfo.Height) - 120

@@ -28,11 +28,11 @@ Begin VB.Form frmConfig
    Begin VB.CheckBox ChckSCEnable 
       Caption         =   "Enable"
       Height          =   495
-      Left            =   4440
+      Left            =   4320
       TabIndex        =   1
       Top             =   0
       Value           =   1  'Checked
-      Width           =   855
+      Width           =   975
    End
    Begin VB.CheckBox ChckSCVisible 
       Caption         =   "On/Off on-screen shortcuts label"
@@ -43,10 +43,10 @@ Begin VB.Form frmConfig
       Value           =   1  'Checked
       Width           =   4815
    End
-   Begin VB.CommandButton btnDone 
-      Caption         =   "Done"
+   Begin VB.CommandButton btnSave 
+      Caption         =   "Save"
       Height          =   495
-      Left            =   4080
+      Left            =   4200
       TabIndex        =   12
       ToolTipText     =   "Save all changes"
       Top             =   4200
@@ -104,9 +104,8 @@ Begin VB.Form frmConfig
          Caption         =   "Change"
          Height          =   375
          Index           =   1
-         Left            =   1800
+         Left            =   1750
          TabIndex        =   4
-         ToolTipText     =   "Activate shortcut TextBox"
          Top             =   1065
          Width           =   765
       End
@@ -116,7 +115,7 @@ Begin VB.Form frmConfig
          Index           =   3
          Left            =   3960
          TabIndex        =   7
-         ToolTipText     =   "Save shortcuts settings"
+         ToolTipText     =   "Set shortcuts change"
          Top             =   1800
          Width           =   1000
       End
@@ -124,9 +123,8 @@ Begin VB.Form frmConfig
          Caption         =   "Change"
          Height          =   375
          Index           =   0
-         Left            =   1800
+         Left            =   1750
          TabIndex        =   2
-         ToolTipText     =   "Activate shortcut TextBox"
          Top             =   450
          Width           =   765
       End
@@ -192,7 +190,7 @@ Begin VB.Form frmConfig
          Y1              =   1680
          Y2              =   1680
       End
-      Begin VB.Label Label2 
+      Begin VB.Label lblBrightDown 
          AutoSize        =   -1  'True
          Caption         =   "Bright-Down"
          BeginProperty Font 
@@ -218,7 +216,7 @@ Begin VB.Form frmConfig
          Y1              =   960
          Y2              =   960
       End
-      Begin VB.Label Label1 
+      Begin VB.Label lblBrightUp 
          AutoSize        =   -1  'True
          Caption         =   "Bright-Up"
          BeginProperty Font 
@@ -250,7 +248,7 @@ Begin VB.Form frmConfig
       BorderColor     =   &H00808080&
       Index           =   2
       X1              =   120
-      X2              =   5280
+      X2              =   5400
       Y1              =   4080
       Y2              =   4080
    End
@@ -272,56 +270,129 @@ Option Explicit
 Private WithEvents SysTray As clsSysTray
 Attribute SysTray.VB_VarHelpID = -1
 
+'----------------------------------------------------------
+' General Functions
+'----------------------------------------------------------
+'Change language
+Private Sub chgLanguage()
+    Me.Caption = LoadResString(108 + L)
+    'Brightness Shortcuts frame
+    Frame1.Caption = LoadResString(109 + L)
+    ChckSCEnable.Caption = LoadResString(110 + L)
+    ChckSCEnable.TooltipText = LoadResString(111 + L)
+    lblBrightUp.Caption = LoadResString(112 + L)
+    lblBrightDown.Caption = LoadResString(113 + L)
+    btnSettings(0).Caption = LoadResString(114 + L)
+    btnSettings(0).TooltipText = LoadResString(115 + L)
+    btnSettings(1).Caption = LoadResString(114 + L)
+    btnSettings(1).TooltipText = LoadResString(115 + L)
+    btnSettings(2).Caption = LoadResString(116 + L)
+    btnSettings(2).TooltipText = LoadResString(117 + L)
+    btnSettings(3).Caption = LoadResString(118 + L)
+    btnSettings(3).TooltipText = LoadResString(119 + L)
+    'Startup program frame
+    ChckRunStartUp.Caption = LoadResString(122 + L)
+    ChckRunBS.Caption = LoadResString(123 + L)
+    'Others settings options
+    ChckSCVisible.Caption = LoadResString(124 + L)
+    lblLanguage.Caption = LoadResString(125 + L)
+    cmdLanguage.TooltipText = LoadResString(126 + L)
+    btnSave.Caption = LoadResString(127 + L)
+    btnSave.TooltipText = LoadResString(128 + L)
+    'Call systray and black-screen forms to change language
+    frmSysTray.chgPopLng
+    If frmMain.Visible Then frmMain.chgMainLblLng
+End Sub
+
+'If Short-cut textbox has lost focus
+Private Function F_txtBright_lostFocus(txt As TextBox) As Boolean
+    F_txtBright_lostFocus = False
+    If txt.Text = "" Then
+        If txt.Name = txtBrightUp.Name Then
+            txt.Text = P_VarRsBrightness
+        Else
+            txt.Text = P_VarLwBrightness
+        End If
+        txt.Enabled = False
+    Else
+        If txt.Enabled Then
+            MsgBox LoadResString(121 + L), vbInformation, LoadResString(120 + L)
+            btnSettings(3).SetFocus
+            F_txtBright_lostFocus = True
+        End If
+    End If
+End Function
+
+'If Short-cut btn is clicked
+Private Sub F_chckSCBtn(txt As TextBox, lostF As TextBox)
+    If Not F_txtBright_lostFocus(lostF) Then 'Check if any of the SC_TextBox has lost focus
+        With txt
+            .Enabled = True
+            .Text = ""
+            .SetFocus
+        End With
+    End If
+End Sub
+
+'If Set btn is clicked
+Private Function F_setSCBtn(txt As TextBox) As Boolean
+    F_setSCBtn = False
+    If txt.Text <> "" Then
+        txt.Enabled = False
+    Else
+        F_setSCBtn = True
+        MsgBox LoadResString(129 + L)
+        txt.SetFocus
+    End If
+End Function
+
+'----------------------------------------------------------
+' Form/Controls Actions
+'----------------------------------------------------------
 Private Sub btnSettings_Click(Index As Integer)
     Select Case btnSettings(Index).Index
-        Case 0:
-            txtBrightUp.Enabled = True
-            txtBrightUp.Text = ""
-            txtBrightUp.SetFocus
+        Case 0: 'Btn bright-up short-cut change
+            F_chckSCBtn txtBrightUp, txtBrightDown
             Exit Sub
-        Case 1:
-            txtBrightDown.Enabled = True
-            txtBrightDown.Text = ""
-            txtBrightDown.SetFocus
+        Case 1: 'Btn bright-down short-cut change
+            F_chckSCBtn txtBrightDown, txtBrightUp
             Exit Sub
-        Case 2:
+        Case 2: 'Reset btn
             txtBrightUp.Text = rB_SC
             txtBrightUp.Enabled = False
             txtBrightDown.Text = lB_SC
             txtBrightDown.Enabled = False
-            
-            P_VarRsBrightness = rB_SC
-            P_VarLwBrightness = lB_SC
             Exit Sub
-        Case 3:
-            If txtBrightUp.Text <> "" Then
-                txtBrightUp.Enabled = False
-            ElseIf txtBrightDown.Text <> "" Then
-                txtBrightDown.Enabled = False
-            Else
-                MsgBox LoadResString(121 + L)
-                If txtBrightUp.Text = "" Then txtBrightUp.SetFocus
-                If txtBrightDown.Text = "" Then txtBrightDown.SetFocus
-            End If
+        Case 3: 'Set btn
+            If txtBrightUp.Enabled Then F_setSCBtn txtBrightUp
+            If txtBrightDown.Enabled Then F_setSCBtn txtBrightDown
     End Select
 End Sub
 
-Private Sub btnDone_Click()
+Private Sub btnSave_Click()
     'Check if the shortcut match with the preview shortcut
     'If they do not match and it still not saved, show a msgbox asking for saving
     Unload Me
 End Sub
 
 Private Sub ChckSCEnable_Click()
+'*********************************
+'  Need to fix the double MsgBox
+'*********************************
     Dim Check, Index As Integer
     
     Check = ChckSCEnable.Value
     
-    Frame1.Enabled = Check
-    Shape1.Visible = CBool(Check = 0)
-    For Index = 0 To btnSettings.UBound
-        btnSettings(Index).Enabled = Check
-    Next
+    If F_setSCBtn(txtBrightUp) Or F_setSCBtn(txtBrightDown) Then
+        If ChckSCEnable.Value = 0 Then ChckSCEnable.Value = 1
+        Exit Sub
+    Else
+        Frame1.Enabled = Check
+        Shape1.Visible = CBool(Check = 0)
+        For Index = 0 To btnSettings.UBound
+            btnSettings(Index).Enabled = Check
+        Next
+    End If
 End Sub
 
 Private Sub ChckSCVisible_Click()
@@ -339,9 +410,7 @@ Private Sub ChckRunStartUp_Click()
     
     ChckRunStartUp.FontBold = Check
     ChckRunBS.Enabled = Check
-    
-'    If ChckRunStartUp.Value = 0 Then ChckRunBS.Value = 0
-    
+  
     If m_IgnoreEvents Then Exit Sub
     SetRunAtStartUp App.EXEName, App.Path, Check
 End Sub
@@ -349,20 +418,19 @@ End Sub
 Private Sub cmdLanguage_Click()
 '    P_VarChckLanguage = cmdLanguage.ListIndex
     F_L cmdLanguage.ListIndex
-    F_LoadLanguage
+    chgLanguage
 End Sub
 
 Private Sub Form_Activate()
     If Me.Visible Then
-        cmdLanguage.ListIndex = P_VarChckLanguage
-        ChckRunStartUp.Value = P_VarChckRunStartUp
-        ChckRunBS.Value = P_VarChckRunBS
-        ChckSCEnable.Value = P_VarChckSCEnable
-        ChckSCVisible.Value = P_VarChckSCVisible
+        timerOnOff False
         txtBrightDown.Text = P_VarLwBrightness
         txtBrightUp.Text = P_VarRsBrightness
-        F_LoadLanguage
-        timerOnOff False
+        ChckSCEnable.Value = P_VarChckSCEnable
+        ChckRunStartUp.Value = P_VarChckRunStartUp
+        ChckRunBS.Value = P_VarChckRunBS
+        ChckSCVisible.Value = P_VarChckSCVisible
+        cmdLanguage.ListIndex = P_VarChckLanguage 'This action by default change program language
     End If
 End Sub
 
@@ -374,20 +442,13 @@ Private Sub Form_LostFocus()
     Unload Me
 End Sub
 
-Private Sub Form_Unload(Cancel As Integer)
+Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
     If Me.Visible Then
-        SaveSettings
-        timerOnOff True
+        If Not F_setSCBtn(txtBrightUp) And Not F_setSCBtn(txtBrightDown) Then
+            SaveSettings
+            timerOnOff True
+        Else
+            Cancel = True
+        End If
     End If
-End Sub
-
-Private Sub txtBrightUp_LostFocus()
-    If txtBrightUp.Text = "" Then
-        txtBrightUp.Text = P_VarRsBrightness
-        txtBrightUp.Enabled = False
-    End If
-End Sub
-
-Private Sub F_LoadLanguage()
-'    LoadResString (121 + L)
 End Sub

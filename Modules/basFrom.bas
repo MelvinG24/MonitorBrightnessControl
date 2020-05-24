@@ -62,8 +62,6 @@ Private Sub Main()
         createSettings
     End If
     
-    '*******************************
-    '¿Estara de Más aquí?
     'Get monitor work area size -without taskbar or desktop toolbars obstruction
     SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
     
@@ -82,7 +80,7 @@ End Sub
 '----------------------------------------------------------
 Public Sub F_L(I As Integer)
     If I = 1 Then
-        L = 1255
+        L = 33
     Else
         L = 0
     End If
@@ -174,7 +172,7 @@ End Sub
 
 Public Sub LoadSettings()
     Dim f, Val As Integer
-    Dim SettingName, Txt As String
+    Dim SettingName, txt As String
     
     chckStartUp 'Function call
     
@@ -199,11 +197,11 @@ Public Sub LoadSettings()
                 Input #f, Val
                 P_VarChckSCVisible = Val
             Case "varLwBrightness":
-                Input #f, Txt
-                P_VarLwBrightness = Txt
+                Input #f, txt
+                P_VarLwBrightness = txt
             Case "varRsBrightness":
-                Input #f, Txt
-                P_VarRsBrightness = Txt
+                Input #f, txt
+                P_VarRsBrightness = txt
         End Select
     Loop
     Close #f

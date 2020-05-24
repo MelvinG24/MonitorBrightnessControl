@@ -56,6 +56,7 @@ Begin VB.Form frmControl
       Top             =   3825
       Width           =   1020
       Begin VB.Label lblConfig 
+         Alignment       =   2  'Center
          Appearance      =   0  'Flat
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
@@ -112,11 +113,13 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Dim sys As StatusBar
 Dim ActiveApp As Long
 
 Private Declare Function GetActiveWindow Lib "user32" () As Long
 
+'----------------------------------------------------------
+' Form/Controls Actions
+'----------------------------------------------------------
 Private Sub btnDayNight_Click(Index As Integer)
     Select Case btnDayNight(Index).Index
         Case 0: 'btnDay
@@ -155,12 +158,11 @@ End Sub
 Private Sub Form_Activate()
     If Me.Visible Then
         'Load Toll-Tip string from RES
-        lblConfig.TooltipText = LoadResString(109)
+        lblConfig.TooltipText = LoadResString(108 + L)
         
         ActiveApp = 0
-        sliderControl.Value = (P_VarBrightnessLevel * 10) / 28.5 'The divisor was changed from its original value of 25.5 to 28.5 because slider now does not go all the way to 100 instead of to 90
+        sliderControl.Value = (P_VarBrightnessLevel * 10) / 25.5
         Timer1.Enabled = True
-        SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
         
         'Set focus on slider control
         sliderControl.SetFocus
@@ -175,22 +177,15 @@ Private Sub Form_LostFocus()
     Unload Me
 End Sub
 
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    If X >= Me.Left And X <= Me.Left + Me.Width And _
-        Y >= Me.Top And Y <= Me.Top + Me.Height Then
-        MsgBox "Shape1 has been clicked."
+Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
+    If Me.Visible Then
+        Timer1.Enabled = False
     End If
 End Sub
 
 Private Sub Form_Resize()
     Me.Top = (WindowRect.Bottom * Screen.TwipsPerPixelY - Me.Height) - 120
     Me.Left = (WindowRect.Right * Screen.TwipsPerPixelX - Me.Width) - 120
-End Sub
-
-Private Sub Form_Unload(Cancel As Integer)
-    If Me.Visible Then
-        Timer1.Enabled = False
-    End If
 End Sub
 
 Private Sub lblConfig_Click()

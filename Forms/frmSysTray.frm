@@ -78,14 +78,14 @@ Private Sub SysTray_RightClick()
     End If
 End Sub
 
-'Change project language
-Private Sub chLng()
-    Dim I, m As Integer
-    m = 0
+'Specify popup-menu language
+Public Sub chgPopLng()
+    Dim I, M As Integer
+    M = 0
     For I = 0 To Me.mPopupMenu.UBound
         If Not Me.mPopupMenu(I).Caption = "-" Then
-            Me.mPopupMenu(I).Caption = LoadResString(103 + m)
-            m = m + 1
+            Me.mPopupMenu(I).Caption = LoadResString(103 + M + L)
+            M = M + 1
         End If
     Next I
 End Sub
@@ -94,7 +94,7 @@ End Sub
 ' Form/Controls Actions
 '----------------------------------------------------------
 Private Sub Form_Load()
-    chLng
+    chgPopLng
     Set SysTray = New clsSysTray
     Me.WindowState = 1
     DoEvents

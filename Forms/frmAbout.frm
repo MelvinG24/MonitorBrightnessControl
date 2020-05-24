@@ -77,7 +77,7 @@ Begin VB.Form frmAbout
    Begin VB.Label lblWWW 
       Alignment       =   1  'Right Justify
       BackStyle       =   0  'Transparent
-      Caption         =   "Label1"
+      Caption         =   "lblWWW"
       Height          =   315
       Left            =   3000
       MouseIcon       =   "frmAbout.frx":5A295
@@ -89,12 +89,12 @@ Begin VB.Form frmAbout
    Begin VB.Label lblDeveloper 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Label1"
+      Caption         =   "lblDeveloper"
       Height          =   195
-      Left            =   160
+      Left            =   165
       TabIndex        =   7
       Top             =   2520
-      Width           =   480
+      Width           =   885
    End
    Begin VB.Line Line 
       BorderColor     =   &H00808080&
@@ -107,7 +107,7 @@ Begin VB.Form frmAbout
    Begin VB.Label lblDescription 
       Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
-      Caption         =   "Descripciï¿½n de la aplicaciï¿½n"
+      Caption         =   "lblDescription"
       ForeColor       =   &H00000000&
       Height          =   435
       Left            =   160
@@ -116,9 +116,10 @@ Begin VB.Form frmAbout
       Width           =   5595
    End
    Begin VB.Label lblTitle 
+      Alignment       =   2  'Center
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Tï¿½tulo de la aplicaciï¿½n"
+      Caption         =   "lblTile"
       BeginProperty Font 
          Name            =   "Ubuntu"
          Size            =   11.25
@@ -130,10 +131,10 @@ Begin VB.Form frmAbout
       EndProperty
       ForeColor       =   &H00000000&
       Height          =   300
-      Left            =   1438
+      Left            =   2520
       TabIndex        =   4
       Top             =   1320
-      Width           =   2310
+      Width           =   630
    End
    Begin VB.Label lblVersion 
       AutoSize        =   -1  'True
@@ -180,7 +181,7 @@ Const KEY_ALL_ACCESS = KEY_QUERY_VALUE + KEY_SET_VALUE + _
 Const HKEY_LOCAL_MACHINE = &H80000002
 Const ERROR_SUCCESS = 0
 Const REG_SZ = 1                         ' Cadena Unicode terminada en valor nulo
-Const REG_DWORD = 4                      ' Nï¿½mero de 32 bits
+Const REG_DWORD = 4                      ' Número de 32 bits
 
 Const gREGKEYSYSINFOLOC = "SOFTWARE\Microsoft\Shared Tools Location"
 Const gREGVALSYSINFOLOC = "MSINFO"
@@ -203,16 +204,19 @@ End Sub
 Private Sub Form_Activate()
     If Me.Visible Then
         ActiveApp = 0
-        Me.Caption = "About: " & App.Title
+        Me.Caption = LoadResString(103 + L)
         lblVersion.Caption = "Version " & App.Major & "." & App.Minor & "." & App.Revision
         lblTitle.Caption = App.Title
-        lblDescription.Caption = App.Title & App.FileDescription
-        lblDeveloper.Caption = "Development by: " & App.CompanyName
+        lblDescription.Caption = App.Title & ", " & LoadResString(130 + L)
+        lblDeveloper.Caption = LoadResString(131 + L) & " " & App.CompanyName
         With lblWWW
             .Caption = App.Comments
             .Tag = .Caption
             .ForeColor = vbBlue
+            .Font.Underline = True
         End With
+        cmdOK.Caption = LoadResString(132 + L)
+        cmdSysInfo.Caption = LoadResString(133 + L)
         Timer1.Enabled = True
     End If
 End Sub
@@ -313,29 +317,8 @@ Private Sub Form_Unload(Cancel As Integer)
     End If
 End Sub
 
-Private Sub lblWWW_DragDrop(Source As Control, X As Single, Y As Single)
-    If Source Is lblWWW Then
-        With lblWWW
-            Call HuperJump(.Tag)
-            .Font.Underline = False
-        End With
-    End If
-End Sub
-
-Private Sub lblWWW_DragOver(Source As Control, X As Single, Y As Single, State As Integer)
-    If State = vbLeave Then
-        With lblWWW
-            .Drag vbEndDrag
-            .Font.Underline = False
-        End With
-    End If
-End Sub
-
-Private Sub lblWWW_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    With lblWWW
-        .Font.Underline = True
-        .Drag vbBeginDrag
-    End With
+Private Sub lblWWW_Click()
+    Call HuperJump(lblWWW.Tag)
 End Sub
 
 Private Sub Timer1_Timer()

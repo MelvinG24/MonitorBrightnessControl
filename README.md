@@ -20,7 +20,7 @@ This program instead of adjusting directly your monitor brightness and damage yo
     - [x] Start-up program with MS-Window
     - [x] Run Black-screen after the program started
     - [x] Show/Hide shortcuts label on the screen
-    - [ ] Change program UI language (English/Spanish)
+    - [x] Change program UI language (English/Spanish)
     - [x] Save user customize settings
 - [ ] Help file
 
@@ -30,7 +30,7 @@ This program instead of adjusting directly your monitor brightness and damage yo
 |---|--|
 |Windows 2000 | Tested on a virtual machine :white_check_mark: |
 |Windows XP | Tested on a virtual machine :white_check_mark: |
-|Windows Vista | Haven't tested yet :exclamation: |
+|Windows Vista | Tested on a virtual machine :white_check_mark: |
 |Windows 7 | Software develop OS :computer: :white_check_mark: |
 |Windows 8 / 8.1 | Haven't tested yet :exclamation: |
 |Windows 10 | Haven't tested yet :exclamation: |
