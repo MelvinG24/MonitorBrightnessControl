@@ -8,7 +8,19 @@ Private Type RECT
     Bottom As Long
 End Type
 
+'Private Type OSVERSIONINFO
+'    dwOSVersionInfoSize As Long
+'    dwMajorVersion As Long
+'    dwMinorVersion As Long
+'    dwBuildNumber As Long
+'    dwPlatformId As Long
+'    szCSDVersion As String * 128
+'End Type
+
 Public WindowRect As RECT
+
+'Private Declare Function GetVersionEx Lib "kernel32" Alias "GetVersionExA" ( _
+'                lpVersionInformation As OSVERSIONINFO) As Long
 
 Private Declare Function ShellExecute Lib "shell32" Alias "ShellExecuteA" ( _
                 ByVal hwnd As Long, _
@@ -44,12 +56,15 @@ Public P_VarChckSCEnable As Integer                 'Check if short-cut are enab
 Public P_VarChckSCVisible As Integer                'Check if short-cut are visible on black-screen
 Public P_VarLwBrightness As String                  'Lower brightness short-cut
 Public P_VarRsBrightness As String                  'Raise brightness short-cut
+'Public P_ICON As Integer                            'Set program icon base on windows version
 Public L As Integer                                 'Language selected if 0(zero) English, if # Spanish
 
 '----------------------------------------------------------
 ' Start-up program
 '----------------------------------------------------------
 Private Sub Main()
+'    Dim OS As OSVERSIONINFO                         'Receives win-version information
+'    Dim retVal As Long                              'Return value
     If App.PrevInstance Then Exit Sub
     
     'Default brightness level after run program
@@ -64,6 +79,18 @@ Private Sub Main()
     
     'Get monitor work area size -without taskbar or desktop toolbars obstruction
     SystemParametersInfo SPI_GETWORKAREA, 0, WindowRect, 0
+    
+    'Get windows version
+'    OS.dwOSVersionInfoSize = Len(OS)
+'    retVal = GetVersionEx(OS)
+'    Debug.Print "Windows version number is:"; OS.dwMajorVersion; "."; OS.dwMinorVersion
+    
+    'Set program icon base on windows version
+'    If OS.dwMajorVersion <= 5 Then                  'Check if we are running WinXP, Win2000, Win98 or Win95
+'        P_ICON = 0
+'    Else                                            'Check if we are running winVista, win7 or above
+'        P_ICON = 1
+'    End If
     
     Load frmSysTray
 End Sub

@@ -11,7 +11,6 @@ Begin VB.Form frmSysTray
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   MouseIcon       =   "frmSysTray.frx":4492
    ScaleHeight     =   45
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   112
@@ -94,6 +93,8 @@ End Sub
 ' Form/Controls Actions
 '----------------------------------------------------------
 Private Sub Form_Load()
+'    Me.Icon = LoadResData(101 + P_ICON, "CUSTOM")
+'    If P_ICON = 1 Then Me.Icon = imgWin7.Picture       'Element imgWin7 is now deleted
     chgPopLng
     Set SysTray = New clsSysTray
     Me.WindowState = 1

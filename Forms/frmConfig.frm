@@ -17,9 +17,9 @@ Begin VB.Form frmConfig
    WhatsThisHelp   =   -1  'True
    Begin VB.ComboBox cmdLanguage 
       Height          =   315
-      ItemData        =   "frmConfig.frx":4492
+      ItemData        =   "frmConfig.frx":1CFA
       Left            =   960
-      List            =   "frmConfig.frx":449C
+      List            =   "frmConfig.frx":1D04
       Style           =   2  'Dropdown List
       TabIndex        =   11
       Top             =   4320
@@ -142,7 +142,7 @@ Begin VB.Form frmConfig
          Appearance      =   0  'Flat
          Enabled         =   0   'False
          BeginProperty Font 
-            Name            =   "Ubuntu Mono"
+            Name            =   "Arial"
             Size            =   9.75
             Charset         =   0
             Weight          =   700
@@ -160,7 +160,7 @@ Begin VB.Form frmConfig
          Appearance      =   0  'Flat
          Enabled         =   0   'False
          BeginProperty Font 
-            Name            =   "Ubuntu Mono"
+            Name            =   "Arial"
             Size            =   9.75
             Charset         =   0
             Weight          =   700
@@ -424,6 +424,7 @@ End Sub
 Private Sub Form_Activate()
     If Me.Visible Then
         timerOnOff False
+'        Me.Icon = LoadResPicture(101 + P_ICON, vbResIcon)
         txtBrightDown.Text = P_VarLwBrightness
         txtBrightUp.Text = P_VarRsBrightness
         ChckSCEnable.Value = P_VarChckSCEnable

@@ -4,7 +4,12 @@ A VB6 project created to help you control your monitor brightness on MS-Windows 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/MelvinG24/MonitorBrightnessControl)
 ![GitHub](https://img.shields.io/github/license/MelvinG24/MonitorBrightnessControl)
 
+<p align="center">
+    <img width="250" src="https://raw.githubusercontent.com/MelvinG24/MonitorBrightnessControl/master/Resource/Logo_MonitorBrightnessControl.png" />
+</p>
+
 ---
+
 ## Why Another Brightness Control Software?
 They are a variety of programs in MS-Windows which already allow the user to manipulate their monitor brightness without touching the monitor itself. However, changing the brightness in most cases is not enough, that's why those types of software come with contrast adjustment as well. The problem with it, instead of just change the brightness user has also taken care of the contrast, making the process of adjustment unnecessarily complex. Additionally, in most cases those software neither provide any restore option, making the user manually restore it changes in case if they want to go back.<br/>
 

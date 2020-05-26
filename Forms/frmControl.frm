@@ -1,5 +1,4 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MsComCtl.ocx"
 Begin VB.Form frmControl 
    BorderStyle     =   4  'Fixed ToolWindow
    ClientHeight    =   4320
@@ -23,24 +22,15 @@ Begin VB.Form frmControl
       Left            =   0
       Top             =   3240
    End
-   Begin MSComctlLib.Slider sliderControl 
+   Begin VB.PictureBox sliderControl 
       Height          =   2295
       Left            =   175
+      OLEDropMode     =   1  'Manual
+      ScaleHeight     =   2235
+      ScaleWidth      =   540
       TabIndex        =   2
       Top             =   720
       Width           =   600
-      _ExtentX        =   1058
-      _ExtentY        =   4048
-      _Version        =   393216
-      OLEDropMode     =   1
-      Orientation     =   1
-      LargeChange     =   10
-      SmallChange     =   10
-      Max             =   90
-      SelStart        =   45
-      TickStyle       =   2
-      TickFrequency   =   45
-      Value           =   45
    End
    Begin VB.PictureBox Picture1 
       Align           =   2  'Align Bottom
@@ -63,7 +53,7 @@ Begin VB.Form frmControl
          BackStyle       =   0  'Transparent
          Caption         =   "Config"
          BeginProperty Font 
-            Name            =   "Ubuntu Mono"
+            Name            =   "Arial"
             Size            =   9.75
             Charset         =   0
             Weight          =   400
@@ -86,9 +76,9 @@ Begin VB.Form frmControl
       Height          =   500
       Index           =   0
       Left            =   240
-      MouseIcon       =   "frmControl.frx":030A
+      MouseIcon       =   "frmControl.frx":0152
       MousePointer    =   99  'Custom
-      Picture         =   "frmControl.frx":0614
+      Picture         =   "frmControl.frx":045C
       Stretch         =   -1  'True
       Top             =   120
       Width           =   500
@@ -98,9 +88,9 @@ Begin VB.Form frmControl
       Height          =   495
       Index           =   1
       Left            =   240
-      MouseIcon       =   "frmControl.frx":52E01
+      MouseIcon       =   "frmControl.frx":52C49
       MousePointer    =   99  'Custom
-      Picture         =   "frmControl.frx":5310B
+      Picture         =   "frmControl.frx":52F53
       Stretch         =   -1  'True
       Top             =   3120
       Width           =   495

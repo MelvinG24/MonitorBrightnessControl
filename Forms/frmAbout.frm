@@ -36,7 +36,7 @@ Begin VB.Form frmAbout
       MultiLine       =   -1  'True
       ScrollBars      =   2  'Vertical
       TabIndex        =   6
-      Text            =   "frmAbout.frx":4492
+      Text            =   "frmAbout.frx":1CFA
       Top             =   3000
       Width           =   3375
    End
@@ -61,7 +61,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgAppLogo 
       Height          =   1215
       Left            =   2290
-      Picture         =   "frmAbout.frx":4901
+      Picture         =   "frmAbout.frx":2169
       Stretch         =   -1  'True
       Top             =   120
       Width           =   1245
@@ -69,7 +69,7 @@ Begin VB.Form frmAbout
    Begin VB.Image imgLicense 
       Height          =   540
       Left            =   202
-      Picture         =   "frmAbout.frx":59821
+      Picture         =   "frmAbout.frx":57089
       Stretch         =   -1  'True
       Top             =   3000
       Width           =   525
@@ -80,7 +80,7 @@ Begin VB.Form frmAbout
       Caption         =   "lblWWW"
       Height          =   315
       Left            =   3000
-      MouseIcon       =   "frmAbout.frx":5A295
+      MouseIcon       =   "frmAbout.frx":57AFD
       MousePointer    =   99  'Custom
       TabIndex        =   8
       Top             =   2520
@@ -121,7 +121,7 @@ Begin VB.Form frmAbout
       BackStyle       =   0  'Transparent
       Caption         =   "lblTile"
       BeginProperty Font 
-         Name            =   "Ubuntu"
+         Name            =   "Arial"
          Size            =   11.25
          Charset         =   0
          Weight          =   700
@@ -204,6 +204,7 @@ End Sub
 Private Sub Form_Activate()
     If Me.Visible Then
         ActiveApp = 0
+'        Me.Icon = LoadResPicture(101 + P_ICON, vbResIcon)
         Me.Caption = LoadResString(103 + L)
         lblVersion.Caption = "Version " & App.Major & "." & App.Minor & "." & App.Revision
         lblTitle.Caption = App.Title
@@ -252,7 +253,7 @@ SysInfoErr:
 End Sub
 
 Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As String, ByRef KeyVal As String) As Boolean
-    Dim I As Long                                           ' Contador de bucle
+    Dim i As Long                                           ' Contador de bucle
     Dim rc As Long                                          ' C�digo de retorno
     Dim hKey As Long                                        ' Controlador de una clave de Registro abierta
     Dim hDepth As Long                                      '
@@ -289,8 +290,8 @@ Public Function GetKeyValue(KeyRoot As Long, KeyName As String, SubKeyRef As Str
     Case REG_SZ                                             ' Tipo de datos String de clave de Registro
         KeyVal = tmpVal                                     ' Copiar valor de cadena
     Case REG_DWORD                                          ' Tipo de datos Double Word de clave del Registro
-        For I = Len(tmpVal) To 1 Step -1                    ' Convertir cada bit
-            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, I, 1)))   ' Generar valor car�cter a car�cter
+        For i = Len(tmpVal) To 1 Step -1                    ' Convertir cada bit
+            KeyVal = KeyVal + Hex(Asc(Mid(tmpVal, i, 1)))   ' Generar valor car�cter a car�cter
         Next
         KeyVal = Format$("&h" + KeyVal)                     ' Convertir Double Word a cadena
     End Select
