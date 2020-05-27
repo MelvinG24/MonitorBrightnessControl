@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MsComCtl.ocx"
 Begin VB.Form frmControl 
    BorderStyle     =   4  'Fixed ToolWindow
    ClientHeight    =   4320
@@ -16,21 +17,31 @@ Begin VB.Form frmControl
    ScaleWidth      =   1098.462
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
+   Begin MSComctlLib.Slider sliderControl 
+      Height          =   2295
+      Left            =   175
+      TabIndex        =   2
+      Top             =   720
+      Width           =   600
+      _ExtentX        =   1058
+      _ExtentY        =   4048
+      _Version        =   393216
+      MousePointer    =   99
+      OLEDropMode     =   1
+      Orientation     =   1
+      LargeChange     =   10
+      SmallChange     =   10
+      Max             =   90
+      SelStart        =   45
+      TickStyle       =   2
+      TickFrequency   =   45
+      Value           =   45
+   End
    Begin VB.Timer Timer1 
       Enabled         =   0   'False
       Interval        =   100
       Left            =   0
       Top             =   3240
-   End
-   Begin VB.PictureBox sliderControl 
-      Height          =   2295
-      Left            =   175
-      OLEDropMode     =   1  'Manual
-      ScaleHeight     =   2235
-      ScaleWidth      =   540
-      TabIndex        =   2
-      Top             =   720
-      Width           =   600
    End
    Begin VB.PictureBox Picture1 
       Align           =   2  'Align Bottom
