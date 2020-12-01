@@ -1,8 +1,8 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MsComCtl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmControl 
    BorderStyle     =   4  'Fixed ToolWindow
-   ClientHeight    =   4320
+   ClientHeight    =   4890
    ClientLeft      =   15
    ClientTop       =   15
    ClientWidth     =   1020
@@ -12,11 +12,26 @@ Begin VB.Form frmControl
    MaxButton       =   0   'False
    MinButton       =   0   'False
    NegotiateMenus  =   0   'False
-   ScaleHeight     =   4320
+   ScaleHeight     =   4890
    ScaleMode       =   0  'User
    ScaleWidth      =   1098.462
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
+   Begin MSComctlLib.Slider SliderOnOff 
+      Height          =   495
+      Left            =   120
+      TabIndex        =   3
+      ToolTipText     =   "OnOff switch"
+      Top             =   3840
+      Width           =   735
+      _ExtentX        =   1296
+      _ExtentY        =   873
+      _Version        =   393216
+      LargeChange     =   1
+      Max             =   1
+      SelectRange     =   -1  'True
+      TickStyle       =   3
+   End
    Begin MSComctlLib.Slider sliderControl 
       Height          =   2295
       Left            =   175
@@ -54,7 +69,7 @@ Begin VB.Form frmControl
       ScaleHeight     =   495
       ScaleWidth      =   1020
       TabIndex        =   0
-      Top             =   3825
+      Top             =   4395
       Width           =   1020
       Begin VB.Label lblConfig 
          Alignment       =   2  'Center
@@ -82,6 +97,13 @@ Begin VB.Form frmControl
          Top             =   120
          Width           =   630
       End
+   End
+   Begin VB.Line Line 
+      BorderColor     =   &H00808080&
+      X1              =   904.616
+      X2              =   129.231
+      Y1              =   3720
+      Y2              =   3720
    End
    Begin VB.Image btnDayNight 
       Height          =   500
@@ -121,8 +143,8 @@ Private Declare Function GetActiveWindow Lib "user32" () As Long
 '----------------------------------------------------------
 ' Form/Controls Actions
 '----------------------------------------------------------
-Private Sub btnDayNight_Click(Index As Integer)
-    Select Case btnDayNight(Index).Index
+Private Sub btnDayNight_Click(index As Integer)
+    Select Case btnDayNight(index).index
         Case 0: 'btnDay
             If sliderControl.Value >= 69 And sliderControl.Value <= 90 Then
                 sliderControl.Value = 68
@@ -146,14 +168,14 @@ Private Sub btnDayNight_Click(Index As Integer)
     End Select
 End Sub
 
-Private Sub btnDayNight_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
-    btnDayNight(Index).Appearance = 1
-    btnDayNight(Index).BorderStyle = 1
+Private Sub btnDayNight_MouseDown(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    btnDayNight(index).Appearance = 1
+    btnDayNight(index).BorderStyle = 1
 End Sub
 
-Private Sub btnDayNight_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
-    btnDayNight(Index).Appearance = 0
-    btnDayNight(Index).BorderStyle = 0
+Private Sub btnDayNight_MouseUp(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    btnDayNight(index).Appearance = 0
+    btnDayNight(index).BorderStyle = 0
 End Sub
 
 Private Sub Form_Activate()
@@ -167,6 +189,13 @@ Private Sub Form_Activate()
         
         'Set focus on slider control
         sliderControl.SetFocus
+        
+        'Check OnOff status
+        If frmSysTray.mPopupMenu(2).Checked = True Then
+            SliderOnOff.Value = 0
+        Else
+            SliderOnOff.Value = 1
+        End If
     End If
 End Sub
 
@@ -201,6 +230,14 @@ End Sub
 
 Private Sub sliderControl_Scroll()
     sliderControl_Change
+End Sub
+
+Private Sub SliderOnOff_Click()
+    OnOffSwitch 2
+End Sub
+
+Private Sub SliderOnOff_Scroll()
+    SliderOnOff_Click
 End Sub
 
 Private Sub Timer1_Timer()
